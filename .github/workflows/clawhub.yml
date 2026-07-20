@@ -1,0 +1,73 @@
+name: ClawHub release
+
+on:
+  pull_request:
+    paths:
+      - skills/unifyport-device-api/**
+      - scripts/**
+      - tests/**
+      - package.json
+      - .github/workflows/clawhub.yml
+  workflow_dispatch:
+    inputs:
+      publisher_handle:
+        description: Type unifyport to confirm the exact ClawHub publishing account
+        required: true
+        type: string
+      confirm_publish:
+        description: Publish the validated main-branch bundle to @unifyport
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: clawhub-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    name: Pre-publish quality gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # 正式发布前重复本地门禁，避免仅依赖另一条 workflow 的历史状态。
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20.x
+      - run: npm run check
+
+  dry-run:
+    name: Tokenless PR dry run
+    if: github.event_name == 'pull_request'
+    needs: quality
+    permissions:
+      contents: read
+      # 仅供 pinned 官方 workflow 校验 source OIDC claims；registry dry run 不使用发布 secret。
+      id-token: write
+    # 官方文档的 moving v1 ref 当前无法解析；固定已核对的完整 SHA 以阻止供应链漂移。
+    uses: openclaw/clawhub/.github/workflows/skill-publish.yml@ed9c8fdda2119176ba21d33e81823f8de79a6960
+    with:
+      skill_path: skills/unifyport-device-api
+      owner: unifyport
+      dry_run: true
+
+  publish:
+    name: Publish to @unifyport
+    # 手工输入、固定 owner 与 token 权限必须同时一致，禁止误发到个人 namespace。
+    if: github.event_name == 'workflow_dispatch' && inputs.publisher_handle == 'unifyport' && inputs.confirm_publish == true && github.ref == 'refs/heads/main'
+    needs: quality
+    permissions:
+      contents: read
+      # 仅供 pinned 官方 workflow 校验 source OIDC claims；真实 registry publish 仍由 CLAWHUB_TOKEN 鉴权。
+      id-token: write
+    # 真实发布与 dry run 使用同一不可变实现，publisher 权限不足时必须 fail closed。
+    uses: openclaw/clawhub/.github/workflows/skill-publish.yml@ed9c8fdda2119176ba21d33e81823f8de79a6960
+    with:
+      skill_path: skills/unifyport-device-api
+      owner: unifyport
+      dry_run: false
+    secrets:
+      clawhub_token: ${{ secrets.CLAWHUB_TOKEN }}

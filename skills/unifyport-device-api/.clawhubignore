@@ -1,0 +1,22 @@
+# 该 ignore 只用于降低误传概率，exact allowlist 和内容扫描仍是发布主门禁。
+.env*
+.git*
+.clawhub/
+.clawdhub/
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+coverage/
+*.log
+*.map
+*.zip
+*.tar
+*.tgz
+*.gz
+*.pem
+*.key
+*.p12
+*.pfx
+*~
+*.swp

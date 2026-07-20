@@ -1,0 +1,15 @@
+# 本地凭据和生成物绝不能成为公开发布候选。
+.DS_Store
+.env*
+node_modules/
+coverage/
+reports/
+*.log
+*.map
+*.tgz
+.clawhub/
+.clawdhub/
+*.pem
+*.key
+*.p12
+*.pfx
