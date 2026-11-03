@@ -6,7 +6,7 @@
 
 Everything under `skills/unifyport-device-api/` must be treated as permanently public under ClawHub's MIT-0 terms. The bundle contains only reviewed public API instructions, a fixed public operation/event catalog, and a dependency-free Node.js client. It must not contain internal routes, pre-production hosts, source-repository details, real request/response captures, credentials, personal data, telemetry, or local files.
 
-The exact maintainer contract lives in `scripts/public-contract.json`. `npm run check:catalog` verifies 68 documented actions, 64 unique method/path routes, 18 webhook events, method distribution, bilingual documentation URLs, risk classification, sensitive-field declarations, and confirmation policy. Unknown operations and events fail closed even if aggregate counts still match.
+The exact maintainer contract lives in `scripts/public-contract.json`. `npm run check:catalog` verifies 82 documented actions, 78 unique method/path routes, 24 webhook events, method distribution, bilingual documentation URLs, risk classification, sensitive-field declarations, and confirmation policy. Unknown operations and events fail closed even if aggregate counts still match.
 
 ### Runtime safeguards
 
@@ -32,7 +32,7 @@ Please use [GitHub private vulnerability reporting](https://github.com/Unify-Por
 
 `skills/unifyport-device-api/` 下的所有内容都必须视为依据 ClawHub MIT-0 条款永久公开。bundle 仅包含经审核的公开 API 指引、固定的公开操作/事件目录，以及不依赖第三方包的 Node.js 客户端。严禁包含内部路由、预发布主机、源码仓库细节、真实请求/响应抓包、凭据、个人数据、遥测或本地文件。
 
-维护侧精确契约位于 `scripts/public-contract.json`。`npm run check:catalog` 会验证 68 个文档动作、64 个唯一 method/path 路由、18 个 webhook event、方法分布、双语文档 URL、风险分类、敏感字段声明和确认策略。即使总数不变，未知操作或事件也会 fail closed。
+维护侧精确契约位于 `scripts/public-contract.json`。`npm run check:catalog` 会验证 82 个文档动作、78 个唯一 method/path 路由、24 个 webhook event、方法分布、双语文档 URL、风险分类、敏感字段声明和确认策略。即使总数不变，未知操作或事件也会 fail closed。
 
 ### 运行时保护
 

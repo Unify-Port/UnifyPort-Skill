@@ -20,15 +20,18 @@ const ALLOWED_CONFIRMATION_MODES = new Set(['none', 'hmac-sha256']);
 const TRUSTED_DOCS_ORIGIN = 'https://www.unifyport.ai';
 const RESERVED_PATH_SEGMENTS = new Set(['internal']);
 const FORBIDDEN_OBJECT_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
-// 公开请求不能把平台维护的状态或未文档化的顶层 proxy 当作可写字段。
-const FORBIDDEN_PUBLIC_BODY_FIELDS = new Set(['auth_status', 'runtime_status', 'proxy']);
+// 本次部署文档已公开 runtime_status/proxy；授权状态仍由平台维护，不可写入。
+const FORBIDDEN_PUBLIC_BODY_FIELDS = new Set(['auth_status']);
+// 仅这两个已审查的 POST 是读取，不能据 HTTP 方法放开其他写接口。
+const POST_READ_ACTIONS = new Set(['get-post', 'list-post-comments']);
 // 共享 messages 路由必须按公开 action 分离，避免一个 action 借用另一个 action 的扩展字段。
 const EXACT_OPERATION_FIELDS = Object.freeze({
   'create-account': {
-    bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_account_ref', 'provider_data'],
+    headerFields: ['Idempotency-Key'],
+    bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_account_ref', 'provider_data', 'runtime_status', 'proxy'],
   },
   'update-account': {
-    bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_data'],
+    bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_data', 'runtime_status', 'proxy'],
   },
   'send-text-message': { bodyFields: ['account_id', 'to', 'message', 'provider_data'] },
   'send-media-message': { bodyFields: ['account_id', 'to', 'message'] },
@@ -80,6 +83,14 @@ const GLOBAL_SENSITIVE_KEYS = new Set([
   'code',
   'url',
   'replytoken',
+  'providerprofile',
+  'webauthnresponse',
+  'joinurl',
+  'loginurl',
+  'authurl',
+  'passkey',
+  'staticprikey',
+  'identityprikey',
 ]);
 
 const normalizeKey = (value) => String(value).toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -134,7 +145,7 @@ const validateCatalog = (value) => {
   }
 
   const expectedCount = value.counts?.documentedActions;
-  if (expectedCount !== 68 || value.counts?.uniqueRoutes !== 64 || value.operations.length !== expectedCount) {
+  if (expectedCount !== 82 || value.counts?.uniqueRoutes !== 78 || value.operations.length !== expectedCount) {
     throw new Error('Operation catalog coverage mismatch');
   }
 
@@ -208,7 +219,7 @@ const validateCatalog = (value) => {
     if (
       operation.confirmation.mode !== expectedConfirmation.mode ||
       operation.confirmation.optIn !== expectedConfirmation.optIn ||
-      (operation.risk === 'read' && operation.method !== 'GET') ||
+      (operation.risk === 'read' && operation.method !== 'GET' && !POST_READ_ACTIONS.has(operation.id)) ||
       (operation.risk === 'write' && operation.method === 'GET') ||
       (operation.risk === 'destructive' && operation.method === 'GET') ||
       (operation.method === 'DELETE' && operation.risk !== 'destructive')
@@ -334,7 +345,7 @@ const assertProxyConfig = (value, path) => {
   }
 };
 
-const assertInputTree = (value, path = '$', depth = 0) => {
+const assertInputTree = (value, path = '$', depth = 0, allowAccountProxyClear = false) => {
   if (depth > 32) throw new Error('Request input is too deeply nested');
   if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) {
     if (typeof value === 'number' && !Number.isFinite(value)) throw new Error(`Invalid number at ${path}`);
@@ -355,7 +366,10 @@ const assertInputTree = (value, path = '$', depth = 0) => {
       throw new Error(`Forbidden request field at ${path}.${key}`);
     }
     if (normalizedKey === 'proxy' || normalizedKey === 'proxyconfig') {
-      assertProxyConfig(item, `${path}.${key}`);
+      // 仅账号 PATCH 的顶层空对象表示恢复默认代理；嵌套或导入配置仍须提供公网 host。
+      const clearsAccountProxy = allowAccountProxyClear && path === '$.body' && key === 'proxy'
+        && isPlainObject(item) && Object.keys(item).length === 0;
+      if (!clearsAccountProxy) assertProxyConfig(item, `${path}.${key}`);
     } else if (normalizedKey === 'url' || normalizedKey.endsWith('url')) {
       assertPublicHttpsUrl(item, `${path}.${key}`);
     }
@@ -378,13 +392,75 @@ const stableStringify = (value) => {
   return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(',')}}`;
 };
 
+// 新公开字段使用显式边界，保留 ID、时间和空清除值原文，不用默认值掩盖错误。
+const validateReviewedInput = (id, params, query, body) => {
+  const requiredString = (value, field) => {
+    if (typeof value !== 'string' || !/\S/.test(value)) throw new Error(`Invalid ${field}`);
+  };
+  const account = () => {
+    if (typeof body.account_id !== 'string' || !/^acc_[A-Za-z0-9][A-Za-z0-9_-]*$/.test(body.account_id)) throw new Error('Invalid account_id');
+  };
+  if (['list-accounts', 'list-posts'].includes(id)) {
+    if (query.limit !== undefined && (!Number.isInteger(query.limit) || query.limit < 1 || query.limit > (id === 'list-accounts' ? 100 : 50))) throw new Error('Invalid limit');
+    if (query.cursor !== undefined && (typeof query.cursor !== 'string' || (id === 'list-posts' && query.cursor.length === 0))) throw new Error('Invalid cursor');
+  }
+  if (id === 'create-account' && body.provider === 'facebook' && body.auth_mode !== 'session') throw new Error('Facebook requires session authorization');
+  if (id === 'update-account' && 'auth_mode' in body && Object.keys(body).length !== 1) throw new Error('auth_mode must be updated alone');
+  if (id === 'submit-passkey-response') requiredString(body.webauthn_response, 'webauthn_response');
+  if (id === 'add-contact') {
+    if (body.phone_number === undefined && body.username === undefined) throw new Error('phone_number or username is required');
+    if (body.phone_number !== undefined && (typeof body.phone_number !== 'string' || !/^[0-9]+$/.test(body.phone_number))) throw new Error('Invalid phone_number');
+    if (body.username !== undefined) requiredString(body.username, 'username');
+    if (body.whatsapp_options !== undefined) {
+      assertAllowedFields(body.whatsapp_options, ['first_name','full_name','sync_to_device_contacts'], 'whatsapp_options');
+      if (body.whatsapp_options.sync_to_device_contacts !== undefined && typeof body.whatsapp_options.sync_to_device_contacts !== 'boolean') throw new Error('Invalid sync_to_device_contacts');
+    }
+  }
+  if (id === 'get-contact-membership') requiredString(query.contact_id, 'contact_id');
+  if (id === 'request-conversation-history') {
+    if (typeof body.conversation_id !== 'string' || !/^[0-9]+@lid$/.test(body.conversation_id)) throw new Error('Invalid history conversation_id');
+    assertAllowedFields(body.before, ['message_id','sent_at','direction'], 'before');
+    requiredString(body.before.message_id, 'before.message_id');
+    if (/^call_record_[0-9a-f]{64}$/.test(body.before.message_id.trim())) throw new Error('Synthetic call records cannot anchor history');
+    if (typeof body.before.sent_at !== 'string' || !/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(body.before.sent_at) || !(Date.parse(body.before.sent_at) >= 1000)) throw new Error('Invalid before.sent_at');
+    if (!['inbound','outbound'].includes(body.before.direction)) throw new Error('Invalid before.direction');
+    if (body.limit !== undefined && (!Number.isInteger(body.limit) || body.limit < 1 || body.limit > 50)) throw new Error('Invalid history limit');
+  }
+  if (['get-post','list-post-comments','reply-post-comment'].includes(id)) requiredString(body.post_id, 'post_id');
+  if (id === 'list-post-comments') {
+    if (body.cursor !== undefined) requiredString(body.cursor, 'cursor');
+    if (body.limit !== undefined && (!Number.isInteger(body.limit) || body.limit < 1 || body.limit > 50)) throw new Error('Invalid comment limit');
+  }
+  if (id === 'reply-post-comment') {
+    requiredString(body.text, 'text');
+    if (body.comment_id !== undefined) requiredString(body.comment_id, 'comment_id');
+  }
+  if (id === 'create-call') {
+    account(); assertAllowedFields(body.to, ['id','type'], 'to'); requiredString(body.to.id, 'to.id');
+    if (body.to.type !== 'user' || !['voice','video'].includes(body.media_type)) throw new Error('Unsupported call recipient or media type');
+  }
+  if (id === 'hangup-call') {
+    account();
+    if (typeof params.call_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(params.call_id)) throw new Error('Invalid call_id');
+  }
+  if (id === 'get-active-call' && (typeof query.account_id !== 'string' || !/^acc_[A-Za-z0-9][A-Za-z0-9_-]*$/.test(query.account_id))) throw new Error('Invalid account_id');
+};
+
 const normalizeInput = (operation, input) => {
   if (!isPlainObject(input)) throw new Error('Input must be a JSON object');
   const inputKeys = Object.keys(input);
-  if (inputKeys.some((key) => !['params', 'query', 'body'].includes(key))) {
-    throw new Error('Input only accepts params, query, and body');
+  if (inputKeys.some((key) => !['params', 'query', 'body', 'headers'].includes(key))) {
+    throw new Error('Input only accepts params, query, body, and headers');
   }
 
+  // 幂等键属于一次逻辑购买的身份，必须与 body 一起绑定确认，且不能覆盖认证头。
+  const headers = input.headers ?? {};
+  assertAllowedFields(headers, operation.id === 'create-account' ? ['Idempotency-Key'] : [], 'headers');
+  for (const value of Object.values(headers)) {
+    if (typeof value !== 'string' || value.length < 1 || value.length > 128 || /[^\x21-\x7e]/.test(value)) {
+      throw new Error('Invalid Idempotency-Key');
+    }
+  }
   const params = input.params ?? {};
   const query = input.query ?? {};
   const body = input.body ?? {};
@@ -396,7 +472,8 @@ const normalizeInput = (operation, input) => {
   assertAllowedFields(body, operation.bodyFields, 'body');
   assertInputTree(params, '$.params');
   assertInputTree(query, '$.query');
-  assertInputTree(body, '$.body');
+  assertInputTree(body, '$.body', 0, operation.id === 'update-account');
+  validateReviewedInput(operation.id, params, query, body);
 
   let pathname = operation.path;
   for (const name of operation.pathParams) {
@@ -444,9 +521,10 @@ const normalizeInput = (operation, input) => {
     query: [...url.searchParams.entries()].sort(([keyA, valueA], [keyB, valueB]) =>
       keyA.localeCompare(keyB) || valueA.localeCompare(valueB)),
     body: hasBody ? body : null,
+    ...(Object.keys(headers).length > 0 ? { headers } : {}),
   });
 
-  return { operation, params, query, body, hasBody, url, serializedBody, canonical };
+  return { operation, params, query, body, headers, hasBody, url, serializedBody, canonical };
 };
 
 export const prepareOperation = (id, input = {}) => normalizeInput(getOperation(id), input);
@@ -530,6 +608,7 @@ const buildPreview = (prepared, token) => ({
   path: prepared.operation.path,
   risk: prepared.operation.risk,
   params: redactSensitive(prepared.params, prepared.operation.sensitiveFields),
+  ...(Object.keys(prepared.headers).length > 0 ? { headers: redactSensitive(prepared.headers, ['Idempotency-Key']) } : {}),
   query: redactSensitive(prepared.query, prepared.operation.sensitiveFields),
   body: prepared.hasBody
     ? redactSensitive(prepared.body, prepared.operation.sensitiveFields)
@@ -616,6 +695,7 @@ export const runOperation = async (id, input = {}, options = {}) => {
       'X-Api-Key': apiKey,
       'User-Agent': 'unifyport-device-api-skill/1',
     };
+    Object.assign(headers, prepared.headers);
     if (prepared.hasBody) headers['Content-Type'] = 'application/json';
 
     const fetchImpl = options.fetchImpl ?? globalThis.fetch;

@@ -2,9 +2,9 @@
 
 [English](../en/guides.md) | [简体中文](guides.md)
 
-本文件汇总 8 个公开概念与授权 guide，不包含抓取的 payload、客户 identifier、手机号、session 或 credential。Operation request field 与执行策略仍以 `../operations.json` 为准。
+本文件汇总 9 个公开概念与授权 guide，不包含抓取的 payload、客户 identifier、手机号、session 或 credential。Operation request field 与执行策略仍以 `../operations.json` 为准。
 
-Guide ID：`introduction`、`quickstart`、`account-lifecycle`、`provider-auth-telegram`、`provider-auth-line`、`provider-auth-zalo`、`provider-auth-twitter`、`provider-auth-whatsapp`。
+Guide ID：`introduction`、`quickstart`、`account-lifecycle`、`provider-auth-telegram`、`provider-auth-line`、`provider-auth-zalo`、`provider-auth-twitter`、`provider-auth-whatsapp`、`provider-auth-facebook`。
 
 ## Introduction
 
@@ -13,7 +13,7 @@ UnifyPort 为 Telegram、WhatsApp、LINE、X (Twitter)、Zalo 与 TikTok 提供�
 - `Workspace`：隔离边界。`X-Api-Key` 只解析到一个 workspace，request body 不需要额外 workspace id。
 - `Account`：一个 provider login，可视为一台虚拟设备。先创建、完成支持的 authorization flow，再通过它收发消息。
 - `Runtime`：account 背后的 live connection。授权成功后自动启动；`runtime_status` 暴露连接状态。
-- `Webhook`：inbound traffic 的唯一记录。消息历史不持久化，漏掉的 event 不能重放，因此应先注册 receiver，并在到达时只保存需要的数据。
+- `Webhook`：已观察消息流量的主要记录。消息历史不持久化，漏掉的 event 不能重放，因此应先注册 receiver，并在到达时只保存需要的数据。
 
 所有 live request 使用 `https://api.unifyport.ai` 与 `X-Api-Key`。每个成功或错误 response 都包含顶层 `request_id` 和 `X-Request-Id` response header。Caller 自带的 `X-Request-Id` 会回显为 `client_request_id`，用于对账。
 
@@ -96,3 +96,13 @@ Provider guide 中的 `params.session_url`、`params.pin` 与 `params.proxy_conf
 - 配对成功会自动启动 runtime；之后调用 runtime-start 是 no-op。
 
 Provider-specific message、action 与 event 支持必须读取 `provider-capabilities.md`，不能根据授权成功推断。
+
+
+## provider-auth-facebook
+
+[公开授权指南](https://www.unifyport.ai/zh-CN/docs/provider-guide/provider-auth-facebook/)
+
+1. 查询 region 并选择 allocatable=true；create-account 使用 provider=facebook、auth_mode=session。
+2. 获授权的 Cookie JSON 仅存于短时受控 session_url；导入使用 credential opt-in、stdin 和 HMAC 确认。Cookie 文件结构以公开指南为准，包含 cookies 数组及 c_user、xs、datr；不要将值贴入聊天或日志。
+3. 授权成功后查询 runtime；starting 等待后有界刷新、stopped 仅在明确意图后 start，running 才发送。不得自动 reconnect 或重试不确定写入。
+4. 从同步的 E2EE type=user 会话获取字符串 ID；仅单条文本/单个媒体，无 caption、mentions、引用或群。audio 部分支持。先配置 active Webhook 并持久化去重，再触发业务。

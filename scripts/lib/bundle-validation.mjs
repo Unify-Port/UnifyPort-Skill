@@ -39,6 +39,7 @@ const GUIDE_IDS_BY_FILE = Object.freeze({
     'provider-auth-zalo',
     'provider-auth-twitter',
     'provider-auth-whatsapp',
+    'provider-auth-facebook',
   ],
   'provider-capabilities.md': [
     'provider-message-support',
@@ -635,7 +636,7 @@ async function validateLocaleReferences(fileMap, issues) {
 
 function validateReferenceCoverage(fileMap, issues) {
   const guideIds = Object.values(GUIDE_IDS_BY_FILE).flat();
-  addIssue(issues, guideIds.length === 14 && new Set(guideIds).size === 14, 'maintainer guide coverage must define exactly 14 unique public guide IDs');
+  addIssue(issues, guideIds.length === 15 && new Set(guideIds).size === 15, 'maintainer guide coverage must define exactly 15 unique public guide IDs');
 
   for (const locale of ['en', 'zh-CN']) {
     for (const [fileName, expectedIds] of Object.entries(GUIDE_IDS_BY_FILE)) {

@@ -103,7 +103,7 @@ The only permitted live origin is exactly `https://api.unifyport.ai`. Do not acc
 - `references/en/safety.md` or `references/zh-CN/safety.md`: mandatory stop conditions and data rules.
 - `references/en/guides.md` or `references/zh-CN/guides.md`: introduction, quickstart, lifecycle, and five provider authorization guides.
 - `references/en/provider-capabilities.md` or `references/zh-CN/provider-capabilities.md`: exact message, action, and webhook provider matrices.
-- `references/en/webhooks.md` or `references/zh-CN/webhooks.md`: delivery, signature, reliability, envelope, and field-level semantics for all 18 standard events.
+- `references/en/webhooks.md` or `references/zh-CN/webhooks.md`: delivery, signature, reliability, envelope, and field-level semantics for all 24 standard events.
 - `references/en/errors.md` or `references/zh-CN/errors.md`: all public error codes grouped by HTTP status.
 - `references/operations.json`: canonical operation allowlist and confirmation metadata.
 - `references/events.json`: canonical standard event catalog.
