@@ -1,0 +1,124 @@
+{
+  "retrievedAt": "2026-11-02",
+  "status": "pending-human-review",
+  "scope": "Deployed public documentation only; candidate evidence, not an active allowlist",
+  "operations": [
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/accounts/get-account-operation/",
+      "method": "GET",
+      "path": "/v1/account-operations/{operation_id}",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-account-operation/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/authentication/create-auth-session/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth-sessions",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/create-auth-session/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/authentication/submit-passkey-response/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/passkey-response",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/submit-passkey-response/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/authentication/confirm-passkey/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/passkey-confirm",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/confirm-passkey/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/contacts/add-contact/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/contacts/add",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/add-contact/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/contacts/get-contact-membership/",
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/contacts/membership",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/get-contact-membership/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/conversations/request-conversation-history/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/history/request",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/conversations/request-conversation-history/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/accounts/list-posts/",
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/posts",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-posts/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/accounts/get-post/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/info",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-post/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/accounts/list-post-comments/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/comments/list",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-post-comments/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/accounts/reply-post-comment/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/comments/reply",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/reply-post-comment/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/calls/create-call/",
+      "method": "POST",
+      "path": "/v1/calls",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/create-call/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/calls/get-active-call/",
+      "method": "GET",
+      "path": "/v1/calls/active",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/get-active-call/"
+    },
+    {
+      "publicDoc": "https://www.unifyport.ai/docs/calls/hangup-call/",
+      "method": "POST",
+      "path": "/v1/calls/{call_id}/hangup",
+      "humanReviewed": false,
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/hangup-call/"
+    }
+  ],
+  "providerReviews": [
+    {
+      "provider": "facebook",
+      "checkedAt": "2026-11-03",
+      "humanReviewed": false,
+      "status": "not-documented-in-reviewed-public-pages",
+      "publicDocs": [
+        "https://www.unifyport.ai/docs/accounts/create-account/",
+        "https://www.unifyport.ai/docs/authentication/import-auth-session/",
+        "https://www.unifyport.ai/docs/receiving-events/webhook-events/"
+      ],
+      "observations": [
+        "Create-account provider enum does not list facebook.",
+        "Session-import supported channels do not list Facebook.",
+        "The standard-event page does not establish Facebook-specific capability or payload acceptance."
+      ],
+      "activation": "pending-public-documentation-and-human-review"
+    }
+  ]
+}
