@@ -2,9 +2,9 @@
 
 [English](guides.md) | [简体中文](../zh-CN/guides.md)
 
-This file summarizes the eight public conceptual and authorization guides. It deliberately contains no captured payload, customer identifier, phone number, session, or credential. Operation request fields and execution policy remain authoritative in `../operations.json`.
+This file summarizes the nine public conceptual and authorization guides. It deliberately contains no captured payload, customer identifier, phone number, session, or credential. Operation request fields and execution policy remain authoritative in `../operations.json`.
 
-Guide IDs: `introduction`, `quickstart`, `account-lifecycle`, `provider-auth-telegram`, `provider-auth-line`, `provider-auth-zalo`, `provider-auth-twitter`, `provider-auth-whatsapp`.
+Guide IDs: `introduction`, `quickstart`, `account-lifecycle`, `provider-auth-telegram`, `provider-auth-line`, `provider-auth-zalo`, `provider-auth-twitter`, `provider-auth-whatsapp`, `provider-auth-facebook`.
 
 ## Introduction
 
@@ -13,7 +13,7 @@ UnifyPort exposes one REST API and one normalized webhook event stream for Teleg
 - `Workspace`: isolation boundary. `X-Api-Key` resolves exactly one workspace, so request bodies do not need another workspace id.
 - `Account`: one provider login, treated as one virtual device. Create it, complete a supported authorization flow, then send and receive through it.
 - `Runtime`: live connection behind an account. Successful authorization starts it automatically; `runtime_status` exposes the connection state.
-- `Webhook`: only record of inbound traffic. Message history is not persisted and missed events cannot be replayed, so register a receiver first and save only required data on arrival.
+- `Webhook`: primary record of observed message traffic. Message history is not persisted and missed events cannot be replayed, so register a receiver first and save only required data on arrival.
 
 All live requests use `https://api.unifyport.ai` and `X-Api-Key`. Every success or error response has top-level `request_id` and the `X-Request-Id` response header. A caller-supplied `X-Request-Id` is echoed as `client_request_id` for reconciliation.
 
@@ -96,3 +96,13 @@ Supported modes are `qrcode` and `code`.
 - Successful pairing starts runtime automatically; a later runtime-start request is a no-op.
 
 For provider-specific message, action, and event support, read `provider-capabilities.md` rather than inferring capability from successful authorization.
+
+
+## provider-auth-facebook
+
+[Public authorization guide](https://www.unifyport.ai/docs/provider-guide/provider-auth-facebook/)
+
+1. Select an allocatable region; create-account uses provider=facebook and auth_mode=session.
+2. Keep authorized Cookie JSON at a short-lived controlled session_url. Import with credential opt-in, stdin and HMAC confirmation. Follow the guide's cookies array including c_user, xs and datr; never paste values into chat or logs.
+3. Check runtime after authorization. Bound refresh while starting; start stopped accounts only with explicit intent. Send only when running. Never reconnect or retry unknown writes automatically.
+4. Preserve the string ID from a synchronized E2EE type=user conversation. One text or media item only; no caption, mentions, quotes or groups. Audio is partial. Configure an active Webhook and persist/deduplicate events before business traffic.

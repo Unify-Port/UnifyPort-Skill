@@ -55,3 +55,14 @@ These are `credential` operations. Confirm the intended key scope/status and sec
 3. Check the public error reference and provider capability guide.
 4. Ask for missing non-secret inputs; never ask the user to paste an API key or session.
 5. Retry reads only when appropriate. Never blindly retry a write, destructive action, or credential operation.
+
+
+## Published contract update 2026-11-03
+
+Page list-accounts with query.limit/cursor, preserve data.next_cursor and bound page counts. Caller-owned optional headers.Idempotency-Key identifies the same logical purchase and is included in HMAC confirmation. Use --input-stdin for the complete input; authentication header overrides are rejected. A 202 deletion is acceptance only: bound get-account-operation queries; legacy 204 has no operation ID. REVIEW needs reconciliation; SUCCEEDED does not prove refunds or authorization.
+
+create-auth-session, submit-passkey-response (webauthn_response is a complete serialized JSON string) and confirm-passkey require credential opt-in. Documented proxy objects remain subject to public egress validation. PATCH auth_mode alone; distinguish omission, explicit empty clears and invalid null values.
+
+add-contact and get-contact-membership follow WhatsApp LID rules; false is a valid result. History before must refer to one real content message; preserve sent_at and reject synthetic call_record IDs. 202 is not guaranteed callbacks or completion. Post/comment IDs remain nonblank strings. get-post/list-post-comments are POST reads without write confirmation; reply-post-comment requires HMAC and comment_id refers only to a confirmed top-level comment.
+
+create-call requires explicit write intent; hangup-call also needs destructive opt-in and HMAC. Server private beta/is_beta eligibility still applies; never dial automatically. Join URLs, authorization URLs, WebAuthn, provider profiles and reply tokens are redacted from model output; use a controlled UI outside chat when display is necessary. get-active-call is read-only; null means no active call. Hangup may return ended or failed, both terminal.

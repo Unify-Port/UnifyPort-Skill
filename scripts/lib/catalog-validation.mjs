@@ -4,20 +4,21 @@ import path from 'node:path';
 
 // 公开目录是运行时授权边界，因此任何结构漂移都必须显式失败，不能静默降级。
 const EXPECTED_METHOD_COUNTS = Object.freeze({
-  GET: 19,
-  POST: 43,
+  GET: 23,
+  POST: 53,
   PATCH: 4,
   DELETE: 2,
 });
 
-const EXPECTED_OPERATION_COUNT = 68;
-const EXPECTED_ROUTE_COUNT = 64;
-const EXPECTED_EVENT_COUNT = 18;
+const EXPECTED_OPERATION_COUNT = 82;
+const EXPECTED_ROUTE_COUNT = 78;
+const EXPECTED_EVENT_COUNT = 24;
 const ALLOWED_RISKS = new Set(['read', 'write', 'credential', 'destructive']);
 const ALLOWED_CONFIRMATION_MODES = new Set(['none', 'hmac-sha256']);
 const ALLOWED_OPT_INS = new Set([null, 'credential', 'destructive']);
-// 公开文档将 runtime 状态定义为只读，且只公开嵌套 proxy 配置，不能扩成顶层可写字段。
-const FORBIDDEN_PUBLIC_BODY_FIELDS = new Set(['auth_status', 'runtime_status', 'proxy']);
+// 本次部署文档公开了配置字段，授权状态仍为服务端所有。
+const FORBIDDEN_PUBLIC_BODY_FIELDS = new Set(['auth_status']);
+const POST_READ_ACTIONS = new Set(['get-post','list-post-comments']);
 const DUPLICATED_ROUTE = 'POST /v1/messages';
 const PUBLIC_DOC_ORIGIN = 'https://www.unifyport.ai';
 const MESSAGE_ALIAS_IDS = new Set([
@@ -234,13 +235,17 @@ function validateOperation(operation, index, issues) {
     addIssue(issues, !FORBIDDEN_PUBLIC_BODY_FIELDS.has(field), `${label}.bodyFields contains undocumented or read-only field: ${field}`);
   }
   validateStringArray(operation.sensitiveFields, `${label}.sensitiveFields`, issues);
+  if (operation.headerFields !== undefined) {
+    const headers = validateStringArray(operation.headerFields, `${label}.headerFields`, issues);
+    addIssue(issues, operation.id === 'create-account' && JSON.stringify(headers) === '["Idempotency-Key"]', `${label} has unsupported headers`);
+  }
   validateRisk(operation.risk, `${label}.risk`, issues);
   validateConfirmation(operation.confirmation, operation.risk, `${label}.confirmation`, issues);
 
   if (operation.method === 'GET') {
     addIssue(issues, operation.risk === 'read' || operation.risk === 'credential', `${label} GET risk must be read or credential`);
   } else {
-    addIssue(issues, operation.risk !== 'read', `${label} non-GET operations must not be classified as read`);
+    addIssue(issues, operation.risk !== 'read' || POST_READ_ACTIONS.has(operation.id), `${label} non-GET operations must not be classified as read unless reviewed`);
   }
 
   if (typeof operation.path === 'string') {

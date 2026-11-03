@@ -46,15 +46,15 @@ const invokeMain = async (argv, { input = '', env = {} } = {}) => {
   return output;
 };
 
-test('catalogs cover exactly 68 documented actions, 64 routes, and 18 events', () => {
-  assert.equal(catalog.operations.length, 68);
+test('catalogs cover exactly 82 documented actions, 78 routes, and 24 events', () => {
+  assert.equal(catalog.operations.length, 82);
   assert.deepEqual(catalog.counts, {
-    documentedActions: 68,
-    uniqueRoutes: 64,
-    methods: { GET: 19, POST: 43, PATCH: 4, DELETE: 2 },
+    documentedActions: 82,
+    uniqueRoutes: 78,
+    methods: { GET: 23, POST: 53, PATCH: 4, DELETE: 2 },
   });
-  assert.equal(new Set(catalog.operations.map(({ id }) => id)).size, 68);
-  assert.equal(new Set(catalog.operations.map(({ method, path }) => `${method} ${path}`)).size, 64);
+  assert.equal(new Set(catalog.operations.map(({ id }) => id)).size, 82);
+  assert.equal(new Set(catalog.operations.map(({ method, path }) => `${method} ${path}`)).size, 78);
   assert.ok(catalog.operations.every(({ title, docs, bodyFields }) => (
     title.en && title.zhCN && docs.en.startsWith('https://www.unifyport.ai/docs/')
       && docs.zhCN.startsWith('https://www.unifyport.ai/zh-CN/docs/') && Array.isArray(bodyFields)
@@ -62,9 +62,9 @@ test('catalogs cover exactly 68 documented actions, 64 routes, and 18 events', (
   )));
 
   const events = JSON.parse(readFileSync(EVENTS_PATH, 'utf8'));
-  assert.equal(events.counts.events, 18);
-  assert.equal(events.events.length, 18);
-  assert.equal(new Set(events.events.map(({ type }) => type)).size, 18);
+  assert.equal(events.counts.events, 24);
+  assert.equal(events.events.length, 24);
+  assert.equal(new Set(events.events.map(({ type }) => type)).size, 24);
   assert.ok(events.events.every(({ description, docs, sensitiveFields }) => (
     description.en && description.zhCN && docs.en && docs.zhCN && Array.isArray(sensitiveFields)
   )));
@@ -79,7 +79,7 @@ test('catalog enforces exact risk and confirmation pairs', () => {
       destructive: { mode: 'hmac-sha256', optIn: 'destructive' },
     }[operation.risk];
     assert.deepEqual(operation.confirmation, expected);
-    if (operation.risk === 'read') assert.equal(operation.method, 'GET');
+    if (operation.risk === 'read') assert.ok(operation.method === 'GET' || ['get-post', 'list-post-comments'].includes(operation.id));
     if (operation.risk === 'write' || operation.risk === 'destructive') assert.notEqual(operation.method, 'GET');
     if (operation.method === 'DELETE') assert.equal(operation.risk, 'destructive');
   }
@@ -88,10 +88,10 @@ test('catalog enforces exact risk and confirmation pairs', () => {
 test('selected public actions keep their exact documented request surfaces', () => {
   const expectedFields = {
     'create-account': {
-      bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_account_ref', 'provider_data'],
+      bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_account_ref', 'provider_data', 'runtime_status', 'proxy'],
     },
     'update-account': {
-      bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_data'],
+      bodyFields: ['name', 'provider', 'region', 'status', 'auth_mode', 'capabilities', 'metadata', 'provider_data', 'runtime_status', 'proxy'],
     },
     'send-text-message': { bodyFields: ['account_id', 'to', 'message', 'provider_data'] },
     'send-media-message': { bodyFields: ['account_id', 'to', 'message'] },

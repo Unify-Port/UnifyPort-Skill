@@ -1,124 +1,380 @@
 {
-  "retrievedAt": "2026-11-02",
-  "status": "pending-human-review",
-  "scope": "Deployed public documentation only; candidate evidence, not an active allowlist",
+  "retrievedAt": "2026-11-03",
+  "status": "local-implementation-pending-final-human-review",
+  "scope": "User-approved local implementation from deployed bilingual public docs; final human evidence review remains pending; no release is claimed. Automated retrieval does not constitute final human review.",
   "operations": [
     {
       "publicDoc": "https://www.unifyport.ai/docs/accounts/get-account-operation/",
       "method": "GET",
       "path": "/v1/account-operations/{operation_id}",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-account-operation/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-account-operation/",
+      "actionId": "get-account-operation",
+      "queryFields": [],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url"
+      ],
+      "evidenceSha256": {
+        "en": "be2526582b399d828c12c12f73728d4d8fe690a72adf4972da80ef9db61f57ea",
+        "zhCN": "14909aea7c933d01f747505c42d4cc5dda9a600482f3e49c3aebb981249c8978"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/authentication/create-auth-session/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/auth-sessions",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/create-auth-session/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/create-auth-session/",
+      "actionId": "create-auth-session",
+      "queryFields": [],
+      "bodyFields": [],
+      "risk": "credential",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "data"
+      ],
+      "evidenceSha256": {
+        "en": "eef41b413fec1ba2d14830860b6b20a6420d7005c93971ca1e2a2e6eba86df21",
+        "zhCN": "85d07a6ac7fd4b823a4d927e8fc3513f6d3043e30635ee893dd7f4d5ffa40710"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/authentication/submit-passkey-response/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/auth/passkey-response",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/submit-passkey-response/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/submit-passkey-response/",
+      "actionId": "submit-passkey-response",
+      "queryFields": [],
+      "bodyFields": [
+        "webauthn_response"
+      ],
+      "risk": "credential",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "data",
+        "webauthn_response"
+      ],
+      "evidenceSha256": {
+        "en": "f1a26ffd6a237742fcb7ebfc30263ee1a5f64b998db6122b23ff19c70417017b",
+        "zhCN": "7c6fde571abc8f82146512ef9624733a6eb3a7991b6f8b7f3de88398071360d7"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/authentication/confirm-passkey/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/auth/passkey-confirm",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/confirm-passkey/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/confirm-passkey/",
+      "actionId": "confirm-passkey",
+      "queryFields": [],
+      "bodyFields": [],
+      "risk": "credential",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "data"
+      ],
+      "evidenceSha256": {
+        "en": "a128ec694e4966c0a4c77b1df216fcf319de7acb45539791084864f5cc44c9ed",
+        "zhCN": "2cecf02c9af46a6a989ee6c93c10ceabffd1294f0e934ccf3bb5df66f913f1c5"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/contacts/add-contact/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/contacts/add",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/add-contact/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/add-contact/",
+      "actionId": "add-contact",
+      "queryFields": [],
+      "bodyFields": [
+        "phone_number",
+        "username",
+        "whatsapp_options"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "phone_number",
+        "username",
+        "whatsapp_options"
+      ],
+      "evidenceSha256": {
+        "en": "6e1f746df854341170dfb917b0fa3e95f17679b86492b1653793929ac4534483",
+        "zhCN": "21fd9de16599982d69a18b123ac8430429acbe2828b85c5d4e2d757d0cea70cb"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/contacts/get-contact-membership/",
       "method": "GET",
       "path": "/v1/accounts/{account_id}/contacts/membership",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/get-contact-membership/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/contacts/get-contact-membership/",
+      "actionId": "get-contact-membership",
+      "queryFields": [
+        "contact_id"
+      ],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "contact_id"
+      ],
+      "evidenceSha256": {
+        "en": "17d032baa8aa9ab1708750dfdeb1b35d27e0a0ea96dd8cbe0d2113c06492e6de",
+        "zhCN": "89381f07c0952d6e23ff8c0634c6d337b9f0607bf6ad4258fb1e1075dc443d9e"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/conversations/request-conversation-history/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/conversations/history/request",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/conversations/request-conversation-history/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/conversations/request-conversation-history/",
+      "actionId": "request-conversation-history",
+      "queryFields": [],
+      "bodyFields": [
+        "conversation_id",
+        "before",
+        "limit"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "before"
+      ],
+      "evidenceSha256": {
+        "en": "d48c2d41404960b1ce35ec03bb44eef7760c4aa848afd483c256ca037ec7d250",
+        "zhCN": "e620ac945a4bd31b0e7fc34bfd53ce3b46d431b2bcbebc496035db7555e4f0da"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/accounts/list-posts/",
       "method": "GET",
       "path": "/v1/accounts/{account_id}/posts",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-posts/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-posts/",
+      "actionId": "list-posts",
+      "queryFields": [
+        "cursor",
+        "limit"
+      ],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "author",
+        "text",
+        "avatar_url"
+      ],
+      "evidenceSha256": {
+        "en": "6214546add8114eac455703c8359480f990125bcc6ffdefba1aeed6e4ee23287",
+        "zhCN": "95530270f7c102e1035145dbafe3ebe8ea4fc5f078d64a00008bc7e3ced199ce"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/accounts/get-post/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/posts/info",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-post/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/get-post/",
+      "actionId": "get-post",
+      "queryFields": [],
+      "bodyFields": [
+        "post_id"
+      ],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "author",
+        "text",
+        "avatar_url"
+      ],
+      "evidenceSha256": {
+        "en": "a28a971f43f3f394a7e59dae9239fe94b722dd5109194faa63b59e12136b7c33",
+        "zhCN": "395a73b828f3ebf49456dcbc159168458dcc34d75ff56375a77b99e201c44206"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/accounts/list-post-comments/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/posts/comments/list",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-post-comments/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/list-post-comments/",
+      "actionId": "list-post-comments",
+      "queryFields": [],
+      "bodyFields": [
+        "post_id",
+        "cursor",
+        "limit"
+      ],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "author",
+        "text",
+        "avatar_url"
+      ],
+      "evidenceSha256": {
+        "en": "04f362f58e05c9ec9f087c231dd6b2d54d43951873bc8cdfa23e8633cd6369c8",
+        "zhCN": "4f9845b4197256351c23cb02dd43b682e834bb80588a20d43b36763405cee5fe"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/accounts/reply-post-comment/",
       "method": "POST",
       "path": "/v1/accounts/{account_id}/posts/comments/reply",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/reply-post-comment/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/accounts/reply-post-comment/",
+      "actionId": "reply-post-comment",
+      "queryFields": [],
+      "bodyFields": [
+        "post_id",
+        "comment_id",
+        "text"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "author",
+        "text"
+      ],
+      "evidenceSha256": {
+        "en": "1324a884a28c4a7501b1fe51768077b51a67cf5238e0324ccfe2c2e911ad3599",
+        "zhCN": "9fe7d553b345b67e007fed453c76ade3482bb1ed41286992688070d6fc1cde2c"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/calls/create-call/",
       "method": "POST",
       "path": "/v1/calls",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/create-call/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/create-call/",
+      "actionId": "create-call",
+      "queryFields": [],
+      "bodyFields": [
+        "account_id",
+        "to",
+        "media_type"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "to"
+      ],
+      "evidenceSha256": {
+        "en": "fd3202b78c75c6eea278d18cb9f44c3e8024f9be728c8e1277ec449b639989f6",
+        "zhCN": "08e43afccb7bc7b45e4a07f02143aaaaee81144493dbd7cb709c608626180e25"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/calls/get-active-call/",
       "method": "GET",
       "path": "/v1/calls/active",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/get-active-call/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/get-active-call/",
+      "actionId": "get-active-call",
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "call_id"
+      ],
+      "evidenceSha256": {
+        "en": "abbed3f635ef8e73784c0bf3f1507b71d9b5b0c8865a2b98312638b76a38d00d",
+        "zhCN": "301c157c3784503fcddb73b427f33ae5ced97cccd476a0a1360594bdcf43f0f5"
+      }
     },
     {
       "publicDoc": "https://www.unifyport.ai/docs/calls/hangup-call/",
       "method": "POST",
       "path": "/v1/calls/{call_id}/hangup",
       "humanReviewed": false,
-      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/hangup-call/"
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/hangup-call/",
+      "actionId": "hangup-call",
+      "queryFields": [],
+      "bodyFields": [
+        "account_id"
+      ],
+      "risk": "destructive",
+      "sensitiveFields": [
+        "account_id",
+        "provider_profile",
+        "reply_token",
+        "join_url",
+        "call_id"
+      ],
+      "evidenceSha256": {
+        "en": "5bcb80a611c484e43ea66ed5cbcb7312c6658998d253a180ceceacbe978493ad",
+        "zhCN": "eb9e554b958406ca1af5d1ba275c7cbded732cdcda1f4159a66437f48b988831"
+      }
     }
   ],
   "providerReviews": [
     {
       "provider": "facebook",
       "checkedAt": "2026-11-03",
+      "status": "documented-limited-support",
       "humanReviewed": false,
-      "status": "not-documented-in-reviewed-public-pages",
       "publicDocs": [
-        "https://www.unifyport.ai/docs/accounts/create-account/",
-        "https://www.unifyport.ai/docs/authentication/import-auth-session/",
-        "https://www.unifyport.ai/docs/receiving-events/webhook-events/"
+        "https://www.unifyport.ai/docs/provider-guide/provider-auth-facebook/",
+        "https://www.unifyport.ai/docs/provider-guide/provider-message-support/",
+        "https://www.unifyport.ai/docs/provider-guide/provider-actions-support/",
+        "https://www.unifyport.ai/docs/provider-guide/provider-webhook-events/"
       ],
-      "observations": [
-        "Create-account provider enum does not list facebook.",
-        "Session-import supported channels do not list Facebook.",
-        "The standard-event page does not establish Facebook-specific capability or payload acceptance."
-      ],
-      "activation": "pending-public-documentation-and-human-review"
+      "boundaries": [
+        "session-only",
+        "authorization != running",
+        "E2EE user conversations",
+        "single text/media",
+        "audio partial",
+        "no groups/quotes/mentions/caption/actions/contacts/posts/calls",
+        "four standard callbacks, no receipts"
+      ]
     }
   ]
 }

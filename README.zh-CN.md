@@ -9,7 +9,7 @@
 ## 包含内容
 
 - 一个 canonical ClawHub Skill：`skills/unifyport-device-api/SKILL.md`。
-- 经过审核的 catalog，覆盖 68 个公开文档 action、64 组唯一 `method + path` 和 18 个标准 webhook event。
+- 按公开文档整理的 catalog，覆盖 82 个公开文档 action、78 组唯一 `method + path` 和 24 个标准 webhook event。
 - 无第三方依赖的 Node.js runner，包含 operation allowlist、敏感信息脱敏和确认门禁。
 - 中英文 Agent reference 与维护文档。
 - 用于检查结构、双语一致性、公开边界、密钥泄露和 bundle 内容的发布门禁。
@@ -82,3 +82,5 @@ canonical operation 与 event inventory 位于：
 ## License
 
 MIT-0，见 [LICENSE](LICENSE)。
+
+2026-11-03 的本地契约更新仍待最终人工证据复核，见[复核范围](docs/contract-review.zh-CN.md)；尚未发布。

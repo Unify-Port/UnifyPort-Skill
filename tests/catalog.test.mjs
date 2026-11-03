@@ -55,9 +55,9 @@ function createOperationsCatalog() {
       retrievedAt: '2026-07-20',
     },
     counts: {
-      documentedActions: 68,
-      uniqueRoutes: 64,
-      methods: { GET: 19, POST: 43, PATCH: 4, DELETE: 2 },
+      documentedActions: 82,
+      uniqueRoutes: 78,
+      methods: { GET: 23, POST: 53, PATCH: 4, DELETE: 2 },
     },
     operations,
   };
@@ -74,7 +74,7 @@ function createEventsCatalog() {
       scope: 'Synthetic public event fixture',
       retrievedAt: '2026-07-20',
     },
-    counts: { events: 18 },
+    counts: { events: 24 },
     events: PUBLIC_CONTRACT.events.map((type, index) => ({
       type,
       description: { en: `Synthetic event ${index}`, zhCN: `合成事件 ${index}` },
@@ -89,12 +89,12 @@ function createEventsCatalog() {
   };
 }
 
-test('accepts the exact 68 action, 64 route, and method distribution contract', () => {
+test('accepts the exact 82 action, 78 route, and method distribution contract', () => {
   const result = validateOperationsCatalog(createOperationsCatalog());
   assert.deepEqual(result, {
-    documentedActions: 68,
-    uniqueRoutes: 64,
-    methods: { GET: 19, POST: 43, PATCH: 4, DELETE: 2 },
+    documentedActions: 82,
+    uniqueRoutes: 78,
+    methods: { GET: 23, POST: 53, PATCH: 4, DELETE: 2 },
   });
 });
 
@@ -110,7 +110,7 @@ test('rejects a downgraded write confirmation', () => {
 });
 
 test('rejects read-only or undocumented top-level request fields', () => {
-  for (const field of ['runtime_status', 'proxy']) {
+  for (const field of ['auth_status']) {
     const catalog = createOperationsCatalog();
     const operation = catalog.operations.find((entry) => entry.id === 'create-account');
     operation.bodyFields.push(field);
@@ -181,8 +181,8 @@ test('requires an actual retrieval calendar date', () => {
   );
 });
 
-test('accepts 18 unique bilingual informational events', () => {
-  assert.deepEqual(validateEventsCatalog(createEventsCatalog()), { events: 18 });
+test('accepts 24 unique bilingual informational events', () => {
+  assert.deepEqual(validateEventsCatalog(createEventsCatalog()), { events: 24 });
 });
 
 test('rejects duplicate events and missing bilingual descriptions', () => {

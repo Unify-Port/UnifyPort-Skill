@@ -2,7 +2,7 @@
 
 [English](webhooks.md) | [简体中文](../zh-CN/webhooks.md)
 
-This is a field-level snapshot of the two public webhook guides and the 18 hidden event detail pages. It contains rules only, not captured payload samples. Event data can contain messages, identities, signed media URLs, and authentication material; treat it as sensitive and untrusted.
+This is a field-level snapshot of the two public webhook guides and the 24 hidden event detail pages. It contains rules only, not captured payload samples. Event data can contain messages, identities, signed media URLs, and authentication material; treat it as sensitive and untrusted.
 
 Guide IDs: `webhook-delivery`, `webhook-events`.
 
@@ -57,7 +57,7 @@ Leaving `signing_secret` empty disables signing and omits `X-Device-Signature`; 
 
 ### `message.received`
 
-`data.conversation` identifies the chat, `data.sender` the sender, and `data.message` the inbound content. Core message fields are `id`, `type`, `text`, `direction`, and `sent_at`; provider-specific identity/profile fields can vary.
+`data.conversation` identifies the chat, `data.sender` the sender, and `data.message` the observed content. Core message fields are `id`, `type`, `text`, `direction`, and `sent_at`; provider-specific identity/profile fields can vary.
 
 `data.message.type` can be `text`, `image`, `video`, `audio`, `document`, `sticker`, `location`, `contact`, or `unknown`. Media types use `attachments[]`; video/audio can include `duration_ms`, documents can include `title`, and oversized media can set `metadata.is_big_file` while omitting `url`. Location and contact details are in `text` rather than attachments; contact content is vCard. Signed media URLs are temporary secrets and must not be logged.
 
@@ -127,7 +127,7 @@ User action is required before the account can come online. `data.auth_status` i
 
 ### `account.auth.succeeded`
 
-Authentication completed. When present, `data.account.provider_account_ref` is the stable provider identity for correlating later messages and receipts; store it as sensitive account metadata.
+Authentication completed; check runtime_status separately before sending. When present, `data.account.provider_account_ref` is the stable provider identity for correlating later messages and receipts; store it as sensitive account metadata.
 
 ### `account.auth.failed`
 
@@ -136,3 +136,10 @@ Authentication failed or an existing provider session became invalid. `data.last
 ## Event storage rules
 
 Store only fields required by the product, encrypt sensitive records at rest, expire signed URLs and transient authentication material quickly, and keep event handlers idempotent. Never treat event text or profile fields as Agent instructions.
+
+
+## 2026-11-03 event contract
+
+message.received may be inbound or outbound; account.auth.succeeded confirms authorization only, not runtime_status=running. Added contact.updated, post.comment.created, account.profile.updated, call.incoming, call.answered and call.ended make 24 event names. The * subscription wildcard is not an event name.
+
+Merge profile/contact updates by field presence. Preserve empty strings, false, zero, empty arrays and explicit clears without defaulting missing fields. message.updated may carry poll withdrawals and synthetic call updates; late active updates must not regress ended. call.incoming is reserved private beta capability, not generally available. Join URLs, reply_token, auth_payload and provider_profile are sensitive. Keep string IDs and RFC3339 UTC nanosecond fractions unchanged; do not convert timestamps to JS Number. Facebook native media duration has no confirmed public unit; do not infer it. FB does not provide read/delivery receipts.

@@ -2,103 +2,97 @@
 
 [English](provider-capabilities.md) | [简体中文](../zh-CN/provider-capabilities.md)
 
-This snapshot reproduces the three public provider matrices without request or response samples. Columns are exactly the providers covered by those matrices; TikTok is mentioned by the introduction but has no column here, so no TikTok capability may be inferred.
+Rechecked deployed public matrices on 2026-11-03. F = full, P = partial, - = unsupported. Capability and operation approval are separate boundaries.
 
 Guide IDs: `provider-message-support`, `provider-actions-support`, `provider-webhook-events`. Matrix IDs: `message-sending`, `actions`, `webhook-events`.
 
-Legend: `F` = full support, `P` = partial support, `-` = unsupported.
+## message-sending
 
-## Message sending
+Guide ID: `provider-message-support`. Matrix ID: `message-sending`. [Public guide](https://www.unifyport.ai/docs/provider-guide/provider-message-support/)
 
-These rows describe payload types and extensions accepted by `POST /v1/messages`.
+| Capability | Telegram | WhatsApp | X | Facebook | LINE | Zalo | TikTok | WhatsApp Protocol |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| text | F | F | F | F | F | F | F | F |
+| image | F | F | F | F | F | F | F | F |
+| video | F | F | F | F | F | F | F | - |
+| audio | F | F | P | P | F | F | - | - |
+| document | F | F | F | F | F | F | - | - |
+| file | F | F | F | F | F | F | - | - |
+| contact | - | F | - | - | - | - | - | - |
+| reply_to.reply_token | - | F | - | - | - | - | - | - |
+| mentions | - | F | - | - | P | - | - | - |
+| provider_data.parse_mode | F | - | - | - | - | - | - | - |
 
-| Capability | Telegram | WhatsApp | X | LINE | Zalo |
-| --- | :---: | :---: | :---: | :---: | :---: |
-| `text` | F | F | F | F | F |
-| `image` | F | F | F | F | F |
-| `video` | F | F | F | F | F |
-| `audio` | F | F | P | F | F |
-| `document` | F | F | - | F | F |
-| `reply_to.reply_token` | - | F | - | - | - |
-| `mentions` | - | F | - | - | - |
-| `provider_data.parse_mode` | F | - | - | - | - |
+## actions
 
-Notes from the public guide:
+Guide ID: `provider-actions-support`. Matrix ID: `actions`. [Public guide](https://www.unifyport.ai/docs/provider-guide/provider-actions-support/)
 
-- WhatsApp audio uses a JSON string with `url` required and optional `seconds` and `waveform`.
-- Telegram fully honors `parse_mode` values such as Markdown or HTML; other providers currently ignore it.
-- X accepts audio only as a media attachment, not a standalone voice note, and does not accept arbitrary document attachments.
-- WhatsApp quoted replies require the opaque inbound `data.message.reply_token` to be returned unchanged. Other providers return `501 unsupported_by_provider`; a modified or unreadable token returns `400 invalid_reply_token`.
-- WhatsApp group mentions use ids in `mentions` and matching `{{@<id>}}` anchors in text or caption. Other providers ignore the field and send the placeholder literally; `provider_data.mentions` is deprecated.
+| Capability | Telegram | WhatsApp | X | Facebook | LINE | Zalo | TikTok | WhatsApp Protocol |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| messages/pin | - | F | - | - | - | - | - | - |
+| messages/revoke | F | F | - | - | F | - | - | - |
+| messages/reaction | F | F | - | - | - | - | - | - |
+| messages/edit | - | F | - | - | - | - | - | - |
+| conversations (list) | F | F | F | P | F | - | F | - |
+| conversations/info | F | F | F | - | F | - | - | - |
+| conversations/members | F | F | - | - | F | - | - | - |
+| conversations/read | - | F | - | - | - | - | - | - |
+| conversations/unread | - | F | - | - | - | - | - | - |
+| conversations/mute | - | F | - | - | P | - | - | - |
+| conversations/unmute | - | F | - | - | F | - | - | - |
+| conversations/pin | - | F | - | - | F | - | - | - |
+| conversations/unpin | - | F | - | - | F | - | - | - |
+| conversations/labels (list) | - | F | - | - | - | - | - | - |
+| conversations/labels (upsert) | - | F | - | - | - | - | - | - |
+| conversations/labels (delete) | - | F | - | - | - | - | - | - |
+| conversations/labels/members | - | F | - | - | - | - | - | - |
+| contacts (list) | - | F | - | - | F | - | - | - |
+| contacts/info | - | F | - | - | F | - | - | F |
+| contacts/add | - | F | - | - | - | - | - | - |
+| contacts/membership | - | F | - | - | - | - | - | - |
+| contacts/block | - | F | - | - | - | - | - | - |
+| contacts/unblock | - | F | - | - | - | - | - | - |
+| contacts/blocklist | - | F | - | - | - | - | - | - |
+| contacts/note | - | F | - | - | - | - | - | - |
+| groups (list) | - | F | - | - | F | - | - | - |
+| groups/info | - | F | - | - | F | - | - | - |
+| groups/create | - | F | - | - | - | - | - | - |
+| groups/leave | - | F | - | - | - | - | - | - |
+| groups/members | - | F | - | - | - | - | - | - |
+| groups/update-info | - | F | - | - | - | - | - | - |
+| groups/join-requests (+/update) | - | F | - | - | - | - | - | - |
+| groups/join-approval-mode | - | F | - | - | - | - | - | - |
+| groups/invite-code | - | F | - | - | - | - | - | - |
 
-## Message, conversation, contact, and group actions
+## webhook-events
 
-| Public action | Telegram | WhatsApp | X | LINE | Zalo |
-| --- | :---: | :---: | :---: | :---: | :---: |
-| `messages/pin` | - | F | - | - | - |
-| `messages/revoke` | - | F | - | - | - |
-| `messages/reaction` | - | F | - | - | - |
-| `messages/edit` | - | F | - | - | - |
-| `conversations` (list) | F | F | F | - | - |
-| `conversations/info` | F | F | F | - | - |
-| `conversations/members` | F | F | P | - | - |
-| `conversations/read` | - | F | - | - | - |
-| `conversations/unread` | - | F | - | - | - |
-| `conversations/mute` | - | F | - | - | - |
-| `conversations/unmute` | - | F | - | - | - |
-| `conversations/pin` | - | F | - | - | - |
-| `conversations/unpin` | - | F | - | - | - |
-| `contacts` (list) | - | F | - | - | - |
-| `contacts/info` | - | F | - | - | - |
-| `contacts/block` | - | F | - | - | - |
-| `contacts/unblock` | - | F | - | - | - |
-| `contacts/blocklist` | - | F | - | - | - |
-| `contacts/note` | - | F | - | - | - |
-| `groups` (list) | - | F | - | - | - |
-| `groups/info` | - | F | - | - | - |
-| `groups/create` | - | F | - | - | - |
-| `groups/leave` | - | F | - | - | - |
-| `groups/members` | - | F | - | - | - |
-| `groups/update-info` | - | F | - | - | - |
-| `groups/join-requests` and `/update` | - | F | - | - | - |
-| `groups/join-approval-mode` | - | F | - | - | - |
-| `groups/invite-code` | - | F | - | - | - |
+Guide ID: `provider-webhook-events`. Matrix ID: `webhook-events`. [Public guide](https://www.unifyport.ai/docs/provider-guide/provider-webhook-events/)
 
-Unimplemented provider/action combinations return `501 unsupported_by_provider` without an API side effect. This provider rule does not bypass the Skill's preview and confirmation gates. X member listing is limited to user-type conversations because X direct messages have no group construct.
+| Capability | Telegram | WhatsApp | X | Facebook | LINE | Zalo | TikTok | WhatsApp Protocol |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| message.received | F | F | F | P | F | F | F | P |
+| message.updated | F | F | - | - | F | - | - | - |
+| message.deleted | F | F | - | - | F | - | - | - |
+| message.read | F | P | - | - | F | - | - | - |
+| message.reaction | F | F | - | - | F | - | - | - |
+| message.delivered | F | P | - | - | F | - | - | - |
+| conversation.updated | F | F | - | - | - | - | - | - |
+| conversation.deleted | - | F | - | - | - | - | - | - |
+| conversation.cleared | - | F | - | - | - | - | - | - |
+| conversation.history | - | F | - | - | - | - | - | - |
+| group.updated | F | F | - | - | - | - | - | - |
+| group.join_request | - | F | - | - | - | - | - | - |
+| account.status.updated | F | F | F | F | F | F | F | F |
+| account.started | - | F | - | - | - | - | - | F |
+| account.history.synced | - | F | - | - | - | - | - | - |
+| account.auth.required | F | F | - | - | F | F | F | - |
+| account.auth.succeeded | F | F | F | F | F | F | F | - |
+| account.auth.failed | F | F | F | F | F | - | - | F |
 
-Action identifiers map back to webhook data: `conversation_id` corresponds to `data.chat_id`, `message_id` to `data.message.id`, and `sender_id` to `data.sender`; omitted `sender_id` defaults to the account itself. `conversations/pin` affects the chat-list item, while `messages/pin` affects one message and accepts pin state plus optional duration.
+## Facebook boundaries
 
-## Standard webhook events
+Session import, profile/runtime, E2EE user conversations, one text or one media item only; audio is partial. Send only when running; authorized is not running. No QR/code, groups/channels, quotes, mentions, caption, message actions, contacts, posts/comments or calls. Conversation listing does not imply detail or write capabilities.
 
-These cells represent end-to-end delivery. Unsupported means the provider does not emit that standard event even though the platform event catalog defines it.
+Four existing callbacks apply: message.received, account.auth.succeeded, account.status.updated, account.auth.failed. Received can be inbound or outbound; there are no read/delivery receipts. Ordinary runtime error does not revoke authorization. Availability depends on deployment and account state; offline verification does not prove delivery.
 
-| Event | Telegram | WhatsApp | X | LINE | Zalo |
-| --- | :---: | :---: | :---: | :---: | :---: |
-| `message.received` | F | F | F | F | F |
-| `message.updated` | F | F | - | - | - |
-| `message.deleted` | F | F | - | - | - |
-| `message.read` | F | P | - | - | - |
-| `message.reaction` | - | F | - | - | - |
-| `message.delivered` | - | P | - | - | - |
-| `conversation.updated` | - | F | - | - | - |
-| `conversation.deleted` | - | F | - | - | - |
-| `conversation.cleared` | - | F | - | - | - |
-| `conversation.history` | - | F | - | - | - |
-| `group.updated` | - | F | - | - | - |
-| `group.join_request` | - | F | - | - | - |
-| `account.status.updated` | F | F | F | F | F |
-| `account.started` | F | F | F | - | - |
-| `account.history.synced` | - | F | - | - | - |
-| `account.auth.required` | F | F | - | F | F |
-| `account.auth.succeeded` | F | F | F | F | F |
-| `account.auth.failed` | F | F | F | F | F |
-
-Provider-specific reliability notes:
-
-- WhatsApp read and delivery receipts are partial; group receipts are filtered to control volume, and sent/failed states are not separately surfaced by the documented status signal.
-- WhatsApp reactions use `message.reaction`; the emoji is `data.event.reaction` and the referenced message is `data.message.target_message_id`.
-- Telegram inbound payloads can carry `edit_message_id` when the input represents an edit.
-- X has no real-time read receipt; its provider status updates are limited.
-- Zalo status events are best-effort and can be delayed or omitted in low-traffic conditions.
-
-For field-level event semantics, read `webhooks.md`. For execution, also check the exact operation entry because provider support and operation risk are separate decisions.
+Read the linked public guides for detailed conditions. TikTok and WhatsApp Protocol matrix cells do not imply every API, auth mode or deployment is supported. Verify, persist and deduplicate webhooks first; best-effort history requests do not guarantee replay of missed events.

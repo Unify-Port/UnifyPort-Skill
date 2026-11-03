@@ -6,12 +6,12 @@
 
 Catalog 反映发布时的 UnifyPort 公开 API 文档。当前基线包含：
 
-- 68 个文档 action；
-- 64 组唯一 `method + path`；
-- 14 个概念或 workflow guide；
-- 18 个标准 webhook event type。
+- 82 个文档 action；
+- 78 组唯一 `method + path`；
+- 15 个概念或 workflow guide；
+- 24 个标准 webhook event type。
 
-HTTP method 分布为 `GET 19`、`POST 43`、`PATCH 4` 与 `DELETE 2`。经过审核的 risk classification 为 `read 16`、`write 34`、`credential 11` 与 `destructive 7`；不能根据 method 推导 risk。
+HTTP method 分布为 `GET 23`、`POST 53`、`PATCH 4` 与 `DELETE 2`。经过审核的 risk classification 为 `read 22`、`write 38`、`credential 14` 与 `destructive 8`；不能根据 method 推导 risk。
 
 其中 5 个 message action 共享 `POST /v1/messages`，因此 action 数量与 route 数量不同。它们的 request shape 和用户意图不同，所以仍然是独立的 catalog entry。
 
@@ -27,23 +27,25 @@ Validator 与 runner 直接使用这些文件，而不是复制一份 Markdown e
 | 公开文档分类 | 文档 action 数 |
 | --- | ---: |
 | Workspace | 2 |
-| Accounts | 5 |
-| Authentication | 8 |
+| Accounts | 6 |
+| Authentication | 11 |
 | Runtime | 4 |
 | Messages | 9 |
-| Conversations | 13 |
-| Contacts | 6 |
+| Conversations | 14 |
+| Contacts | 8 |
 | Groups | 10 |
 | API Keys | 4 |
 | Webhook Endpoints | 6 |
 | Providers | 1 |
-| **总计** | **68** |
+| Posts | 4 |
+| Calls | 3 |
+| **总计** | **82** |
 
 ## Guide 与 Event
 
 Skill 还覆盖公开文档中的 introduction、quickstart、account lifecycle、provider authorization、provider capability matrix、error reference、webhook delivery 与 signature verification、标准 event payload，以及各 event reference。
 
-Event name 是协议值，永不翻译。当前基线包含 message、conversation、group、account runtime 和 account authentication 域的 18 个 event type。
+Event name 是协议值，永不翻译。当前基线包含 message、conversation、group、account runtime 和 account authentication 域的 24 个 event type。
 
 ## 覆盖不等于执行权限
 

@@ -6,17 +6,17 @@
       "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/webhook-events/"
     },
     "scope": "Deployed public standard webhook event catalogue",
-    "retrievedAt": "2026-07-20"
+    "retrievedAt": "2026-11-03"
   },
   "counts": {
-    "events": 18
+    "events": 24
   },
   "events": [
     {
       "type": "message.received",
       "description": {
-        "en": "An inbound message arrived on the account.",
-        "zhCN": "账号收到一条入站消息。"
+        "en": "A message was observed; direction may be inbound or outbound.",
+        "zhCN": "观察到消息；direction 可能为 inbound 或 outbound。"
       },
       "docs": {
         "en": "https://www.unifyport.ai/docs/receiving-events/event-message-received/",
@@ -424,8 +424,8 @@
     {
       "type": "account.auth.succeeded",
       "description": {
-        "en": "Authentication finished and the account is online.",
-        "zhCN": "认证完成，账号已上线。"
+        "en": "Authorization succeeded; check runtime_status separately before sending.",
+        "zhCN": "授权成功；发送前仍须单独检查 runtime_status。"
       },
       "docs": {
         "en": "https://www.unifyport.ai/docs/receiving-events/event-account-auth-succeeded/",
@@ -466,6 +466,138 @@
         "auth_payload",
         "session",
         "token"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "contact.updated",
+      "description": {
+        "en": "Contact fields changed; merge supplied fields including explicit empty clears.",
+        "zhCN": "联系人字段更新；合并已提供字段，保留显式清空。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-contact-updated/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-contact-updated/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "post.comment.created",
+      "description": {
+        "en": "A post comment was observed; no implied reply acknowledgement.",
+        "zhCN": "观察到帖子评论，不代表已回复。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-post-comment-created/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-post-comment-created/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "account.profile.updated",
+      "description": {
+        "en": "Merge supplied profile fields only; missing fields are unknown.",
+        "zhCN": "仅合并已提供的资料字段，缺失不代表清空。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-account-profile-updated/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-account-profile-updated/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "call.incoming",
+      "description": {
+        "en": "Private beta incoming call event; join URL is sensitive and availability is gated.",
+        "zhCN": "Private beta 来电事件；join URL 为敏感信息，能力受服务端限制。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-call-incoming/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-call-incoming/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "call.answered",
+      "description": {
+        "en": "Call answered; synthetic message call records are a separate stream.",
+        "zhCN": "通话已接听；合成消息通话记录属于另一事件流。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-call-answered/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-call-answered/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
+      ],
+      "confirmation": {
+        "mode": "none",
+        "optIn": null
+      }
+    },
+    {
+      "type": "call.ended",
+      "description": {
+        "en": "Call ended; preserve terminal state when updates arrive out of order.",
+        "zhCN": "通话结束；乱序更新不能回退终态。"
+      },
+      "docs": {
+        "en": "https://www.unifyport.ai/docs/receiving-events/event-call-ended/",
+        "zhCN": "https://www.unifyport.ai/zh-CN/docs/receiving-events/event-call-ended/"
+      },
+      "risk": "read",
+      "sensitiveFields": [
+        "data",
+        "join_url",
+        "reply_token",
+        "provider_profile"
       ],
       "confirmation": {
         "mode": "none",

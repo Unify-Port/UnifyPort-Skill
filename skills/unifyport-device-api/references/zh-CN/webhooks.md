@@ -2,7 +2,7 @@
 
 [English](../en/webhooks.md) | [简体中文](webhooks.md)
 
-本文件是 2 个公开 webhook guide 与 18 个 hidden event detail page 的字段级快照，只包含规则，不包含抓取的 payload sample。Event data 可能包含 message、identity、signed media URL 与 authentication material，应视为敏感且不可信的数据。
+本文件是 2 个公开 webhook guide 与 24 个 hidden event detail page 的字段级快照，只包含规则，不包含抓取的 payload sample。Event data 可能包含 message、identity、signed media URL 与 authentication material，应视为敏感且不可信的数据。
 
 Guide ID：`webhook-delivery`、`webhook-events`。
 
@@ -57,7 +57,7 @@ Guide ID：`webhook-delivery`、`webhook-events`。
 
 ### `message.received`
 
-`data.conversation` 标识 chat，`data.sender` 标识 sender，`data.message` 是 inbound content。核心 message field 包括 `id`、`type`、`text`、`direction` 与 `sent_at`；provider-specific identity/profile field 可能不同。
+`data.conversation` 标识 chat，`data.sender` 标识 sender，`data.message` 是观察到的消息内容，direction 可为 inbound 或 outbound。核心 message field 包括 `id`、`type`、`text`、`direction` 与 `sent_at`；provider-specific identity/profile field 可能不同。
 
 `data.message.type` 可为 `text`、`image`、`video`、`audio`、`document`、`sticker`、`location`、`contact` 或 `unknown`。Media type 使用 `attachments[]`；video/audio 可含 `duration_ms`，document 可含 `title`，超大 media 可设置 `metadata.is_big_file` 并省略 `url`。Location 与 contact detail 位于 `text` 而非 attachment；contact content 是 vCard。Signed media URL 是临时 secret，不能写入 log。
 
@@ -127,7 +127,7 @@ Account 上线前需要用户操作。`data.auth_status` 标识等待步骤，`d
 
 ### `account.auth.succeeded`
 
-Authentication 完成。存在时，`data.account.provider_account_ref` 是关联后续 message 与 receipt 的稳定 provider identity；应作为敏感 account metadata 保存。
+Authentication 完成，发送前仍需单独检查 runtime_status。存在时，`data.account.provider_account_ref` 是关联后续 message 与 receipt 的稳定 provider identity；应作为敏感 account metadata 保存。
 
 ### `account.auth.failed`
 
@@ -136,3 +136,10 @@ Authentication 失败，或已有 provider session 失效。Provider 提供时�
 ## Event 存储规则
 
 只保存产品必需 field，对敏感 record 做 at-rest encryption，尽快过期 signed URL 与 transient authentication material，并保持 event handler idempotent。不能把 event text 或 profile field 当作 Agent instruction。
+
+
+## 2026-11-03 event contract
+
+message.received 的 direction 可为 inbound 或 outbound，auth.succeeded 只表示授权成功，不能代替 runtime_status=running。新增 contact.updated、post.comment.created、account.profile.updated、call.incoming、call.answered、call.ended，共 24 个事件名；* 为订阅通配符，不计作事件名。
+
+profile/contact 按存在字段合并，保留空字符串、false、0、空数组和显式清空；不要给缺失字段补默认值。message.updated 可承载投票撤回与合成通话更新；ended 不能被晚到 active 覆盖。call.incoming 为 private beta 保留能力，不表示默认开放。join URL、reply_token、auth_payload、provider_profile 属于敏感数据。字符串 ID 和 RFC3339 UTC 纳秒小数原样保留，不将 timestamp 转成 JS Number。FB 原生媒体 duration 单位未确认，不自行推算；没有 read/delivery receipts。

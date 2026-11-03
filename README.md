@@ -9,7 +9,7 @@ The published bundle is self-contained: it uses only the Node.js standard librar
 ## What is included
 
 - One canonical ClawHub Skill at `skills/unifyport-device-api/SKILL.md`.
-- A reviewed catalog covering 68 public documentation actions, 64 unique `method + path` pairs, and 18 standard webhook events.
+- A public-document catalog covering 82 public documentation actions, 78 unique `method + path` pairs, and 24 standard webhook events.
 - A dependency-free Node.js runner with an operation allowlist, secret redaction, and confirmation gates.
 - English and Simplified Chinese agent references and maintainer documentation.
 - Release checks for structure, bilingual parity, public-boundary safety, secret leakage, and bundle contents.
@@ -82,3 +82,5 @@ Only `skills/unifyport-device-api/` is the ClawHub publication root. Repository 
 ## License
 
 MIT-0. See [LICENSE](LICENSE).
+
+The 2026-11-03 local contract update awaits final human evidence review; see [review scope](docs/contract-review.md). This contract update remains unreleased.

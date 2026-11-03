@@ -55,7 +55,7 @@ function createCatalogs() {
   const operationCatalog = {
     schemaVersion: 1,
     source,
-    counts: { documentedActions: 68, uniqueRoutes: 64, methods: { GET: 19, POST: 43, PATCH: 4, DELETE: 2 } },
+    counts: { documentedActions: 82, uniqueRoutes: 78, methods: { GET: 23, POST: 53, PATCH: 4, DELETE: 2 } },
     operations,
   };
   const eventCatalog = {
@@ -67,7 +67,7 @@ function createCatalogs() {
         zhCN: 'https://www.unifyport.ai/zh-CN/docs/receiving-events/webhook-events/',
       },
     },
-    counts: { events: 18 },
+    counts: { events: 24 },
     events: PUBLIC_CONTRACT.events.map((type, index) => ({
       type,
       description: { en: `Synthetic event ${index}`, zhCN: `合成事件 ${index}` },
@@ -129,8 +129,8 @@ node scripts/client.mjs --help
     'safety.md': ['# Safety\n\n## Stop conditions\n\nFail closed.\n', '# 安全\n\n## 停止条件\n\n默认拒绝。\n'],
     'workflows.md': ['# Workflows\n\n## Documentation\n\nExplain first.\n', '# 工作流\n\n## 文档\n\n先解释。\n'],
     'guides.md': [
-      '# Guides\n\nGuide IDs: `introduction`, `quickstart`, `account-lifecycle`, `provider-auth-telegram`, `provider-auth-line`, `provider-auth-zalo`, `provider-auth-twitter`, `provider-auth-whatsapp`.\n',
-      '# Guide\n\nGuide ID：`introduction`、`quickstart`、`account-lifecycle`、`provider-auth-telegram`、`provider-auth-line`、`provider-auth-zalo`、`provider-auth-twitter`、`provider-auth-whatsapp`。\n',
+      '# Guides\n\nGuide IDs: `introduction`, `quickstart`, `account-lifecycle`, `provider-auth-telegram`, `provider-auth-line`, `provider-auth-zalo`, `provider-auth-twitter`, `provider-auth-whatsapp`, `provider-auth-facebook`.\n',
+      '# Guide\n\nGuide ID：`introduction`、`quickstart`、`account-lifecycle`、`provider-auth-telegram`、`provider-auth-line`、`provider-auth-zalo`、`provider-auth-twitter`、`provider-auth-whatsapp`、`provider-auth-facebook`。\n',
     ],
     'provider-capabilities.md': [
       '# Provider capabilities\n\nGuide IDs: `provider-message-support`, `provider-actions-support`, `provider-webhook-events`. Matrix IDs: `message-sending`, `actions`, `webhook-events`.\n\n| Capability | Telegram | WhatsApp | X | LINE | Zalo |\n| --- | --- | --- | --- | --- | --- |\n| Action | Telegram | WhatsApp | X | LINE | Zalo |\n| --- | --- | --- | --- | --- | --- |\n| Event | Telegram | WhatsApp | X | LINE | Zalo |\n| --- | --- | --- | --- | --- | --- |\n',

@@ -6,12 +6,12 @@
 
 The catalog mirrors the public UnifyPort API documentation at the time of release. The baseline contains:
 
-- 68 documented actions;
-- 64 unique `method + path` pairs;
-- 14 conceptual or workflow guides;
-- 18 standard webhook event types.
+- 82 documented actions;
+- 78 unique `method + path` pairs;
+- 15 conceptual or workflow guides;
+- 24 standard webhook event types.
 
-HTTP methods are distributed as `GET 19`, `POST 43`, `PATCH 4`, and `DELETE 2`. Reviewed risk classifications are `read 16`, `write 34`, `credential 11`, and `destructive 7`; risk is not inferred from the method.
+HTTP methods are distributed as `GET 23`, `POST 53`, `PATCH 4`, and `DELETE 2`. Reviewed risk classifications are `read 22`, `write 38`, `credential 14`, and `destructive 8`; risk is not inferred from the method.
 
 Five documented message actions share `POST /v1/messages`, which explains the difference between action and route counts. They remain separate catalog entries because their request shapes and user intent differ.
 
@@ -27,23 +27,25 @@ Those files, rather than a duplicated Markdown endpoint list, are validated for 
 | Public documentation category | Documented actions |
 | --- | ---: |
 | Workspace | 2 |
-| Accounts | 5 |
-| Authentication | 8 |
+| Accounts | 6 |
+| Authentication | 11 |
 | Runtime | 4 |
 | Messages | 9 |
-| Conversations | 13 |
-| Contacts | 6 |
+| Conversations | 14 |
+| Contacts | 8 |
 | Groups | 10 |
 | API Keys | 4 |
 | Webhook Endpoints | 6 |
 | Providers | 1 |
-| **Total** | **68** |
+| Posts | 4 |
+| Calls | 3 |
+| **Total** | **82** |
 
 ## Guides and events
 
 The Skill also covers the public introduction, quickstart, account lifecycle, provider authorization, provider capability matrices, error reference, webhook delivery and signature verification, standard event payloads, and per-event references.
 
-Event names remain protocol values and are never translated. The current baseline includes 18 event types across message, conversation, group, account runtime, and account authentication domains.
+Event names remain protocol values and are never translated. The current baseline includes 24 event types across message, conversation, group, account runtime, and account authentication domains.
 
 ## Coverage versus permission
 

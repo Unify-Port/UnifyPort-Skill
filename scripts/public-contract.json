@@ -6,77 +6,337 @@
       "zhCN": "https://www.unifyport.ai/zh-CN/docs/"
     },
     "scope": "Deployed public Device API documentation",
-    "retrievedAt": "2026-07-20"
+    "retrievedAt": "2026-11-03"
   },
   "operations": {
-    "get-workspace": { "method": "GET", "path": "/v1/workspace" },
-    "update-workspace": { "method": "PATCH", "path": "/v1/workspace" },
-    "list-accounts": { "method": "GET", "path": "/v1/accounts" },
-    "create-account": { "method": "POST", "path": "/v1/accounts" },
-    "get-account": { "method": "GET", "path": "/v1/accounts/{account_id}" },
-    "update-account": { "method": "PATCH", "path": "/v1/accounts/{account_id}" },
-    "delete-account": { "method": "DELETE", "path": "/v1/accounts/{account_id}" },
-    "get-account-auth": { "method": "GET", "path": "/v1/accounts/{account_id}/auth" },
-    "start-code-auth": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/start" },
-    "submit-auth-code": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/code" },
-    "start-qr-auth": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/qr/start" },
-    "check-qr-auth": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/qr/check" },
-    "submit-auth-password": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/password" },
-    "import-auth-session": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/session" },
-    "cancel-auth": { "method": "POST", "path": "/v1/accounts/{account_id}/auth/cancel" },
-    "refresh-runtime": { "method": "POST", "path": "/v1/accounts/{account_id}/runtime/refresh" },
-    "start-runtime": { "method": "POST", "path": "/v1/accounts/{account_id}/runtime/start" },
-    "stop-runtime": { "method": "POST", "path": "/v1/accounts/{account_id}/runtime/stop" },
-    "reconnect-runtime": { "method": "POST", "path": "/v1/accounts/{account_id}/runtime/reconnect" },
-    "send-text-message": { "method": "POST", "path": "/v1/messages" },
-    "send-media-message": { "method": "POST", "path": "/v1/messages" },
-    "send-contact-message": { "method": "POST", "path": "/v1/messages" },
-    "send-reply-message": { "method": "POST", "path": "/v1/messages" },
-    "send-mention-message": { "method": "POST", "path": "/v1/messages" },
-    "pin-message": { "method": "POST", "path": "/v1/messages/pin" },
-    "revoke-message": { "method": "POST", "path": "/v1/messages/revoke" },
-    "react-message": { "method": "POST", "path": "/v1/messages/reaction" },
-    "edit-message": { "method": "POST", "path": "/v1/messages/edit" },
-    "list-conversations": { "method": "GET", "path": "/v1/accounts/{account_id}/conversations" },
-    "get-conversation": { "method": "GET", "path": "/v1/accounts/{account_id}/conversations/info" },
-    "list-conversation-members": { "method": "GET", "path": "/v1/accounts/{account_id}/conversations/members" },
-    "mark-conversation-read": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/read" },
-    "mark-conversation-unread": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/unread" },
-    "mute-conversation": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/mute" },
-    "unmute-conversation": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/unmute" },
-    "pin-conversation": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/pin" },
-    "unpin-conversation": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/unpin" },
-    "list-conversation-labels": { "method": "GET", "path": "/v1/accounts/{account_id}/conversations/labels" },
-    "upsert-conversation-label": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/labels/upsert" },
-    "delete-conversation-label": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/labels/delete" },
-    "set-conversation-label-members": { "method": "POST", "path": "/v1/accounts/{account_id}/conversations/labels" },
-    "list-contacts": { "method": "GET", "path": "/v1/accounts/{account_id}/contacts" },
-    "get-contact": { "method": "GET", "path": "/v1/accounts/{account_id}/contacts/info" },
-    "block-contact": { "method": "POST", "path": "/v1/accounts/{account_id}/contacts/block" },
-    "unblock-contact": { "method": "POST", "path": "/v1/accounts/{account_id}/contacts/unblock" },
-    "list-blocklist": { "method": "GET", "path": "/v1/accounts/{account_id}/contacts/blocklist" },
-    "set-contact-note": { "method": "POST", "path": "/v1/accounts/{account_id}/contacts/note" },
-    "list-groups": { "method": "GET", "path": "/v1/accounts/{account_id}/groups" },
-    "get-group": { "method": "GET", "path": "/v1/accounts/{account_id}/groups/info" },
-    "create-group": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/create" },
-    "leave-group": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/leave" },
-    "update-group-members": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/members" },
-    "update-group-info": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/update-info" },
-    "list-group-join-requests": { "method": "GET", "path": "/v1/accounts/{account_id}/groups/join-requests" },
-    "update-group-join-requests": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/join-requests/update" },
-    "set-group-join-approval-mode": { "method": "POST", "path": "/v1/accounts/{account_id}/groups/join-approval-mode" },
-    "get-group-invite-code": { "method": "GET", "path": "/v1/accounts/{account_id}/groups/invite-code" },
-    "list-api-keys": { "method": "GET", "path": "/v1/api-keys" },
-    "create-api-key": { "method": "POST", "path": "/v1/api-keys" },
-    "update-api-key": { "method": "PATCH", "path": "/v1/api-keys/{key_id}" },
-    "rotate-api-key": { "method": "POST", "path": "/v1/api-keys/{key_id}/rotate" },
-    "list-webhooks": { "method": "GET", "path": "/v1/webhook-endpoints" },
-    "create-webhook": { "method": "POST", "path": "/v1/webhook-endpoints" },
-    "get-webhook": { "method": "GET", "path": "/v1/webhook-endpoints/{endpoint_id}" },
-    "update-webhook": { "method": "PATCH", "path": "/v1/webhook-endpoints/{endpoint_id}" },
-    "deactivate-webhook": { "method": "POST", "path": "/v1/webhook-endpoints/{endpoint_id}/deactivate" },
-    "delete-webhook": { "method": "DELETE", "path": "/v1/webhook-endpoints/{endpoint_id}" },
-    "provider-regions": { "method": "GET", "path": "/v1/providers/{provider}/regions" }
+    "get-workspace": {
+      "method": "GET",
+      "path": "/v1/workspace"
+    },
+    "update-workspace": {
+      "method": "PATCH",
+      "path": "/v1/workspace"
+    },
+    "list-accounts": {
+      "method": "GET",
+      "path": "/v1/accounts"
+    },
+    "create-account": {
+      "method": "POST",
+      "path": "/v1/accounts"
+    },
+    "get-account": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}"
+    },
+    "update-account": {
+      "method": "PATCH",
+      "path": "/v1/accounts/{account_id}"
+    },
+    "delete-account": {
+      "method": "DELETE",
+      "path": "/v1/accounts/{account_id}"
+    },
+    "get-account-auth": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/auth"
+    },
+    "start-code-auth": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/start"
+    },
+    "submit-auth-code": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/code"
+    },
+    "start-qr-auth": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/qr/start"
+    },
+    "check-qr-auth": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/qr/check"
+    },
+    "submit-auth-password": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/password"
+    },
+    "import-auth-session": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/session"
+    },
+    "cancel-auth": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/cancel"
+    },
+    "refresh-runtime": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/runtime/refresh"
+    },
+    "start-runtime": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/runtime/start"
+    },
+    "stop-runtime": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/runtime/stop"
+    },
+    "reconnect-runtime": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/runtime/reconnect"
+    },
+    "send-text-message": {
+      "method": "POST",
+      "path": "/v1/messages"
+    },
+    "send-media-message": {
+      "method": "POST",
+      "path": "/v1/messages"
+    },
+    "send-contact-message": {
+      "method": "POST",
+      "path": "/v1/messages"
+    },
+    "send-reply-message": {
+      "method": "POST",
+      "path": "/v1/messages"
+    },
+    "send-mention-message": {
+      "method": "POST",
+      "path": "/v1/messages"
+    },
+    "pin-message": {
+      "method": "POST",
+      "path": "/v1/messages/pin"
+    },
+    "revoke-message": {
+      "method": "POST",
+      "path": "/v1/messages/revoke"
+    },
+    "react-message": {
+      "method": "POST",
+      "path": "/v1/messages/reaction"
+    },
+    "edit-message": {
+      "method": "POST",
+      "path": "/v1/messages/edit"
+    },
+    "list-conversations": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/conversations"
+    },
+    "get-conversation": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/conversations/info"
+    },
+    "list-conversation-members": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/conversations/members"
+    },
+    "mark-conversation-read": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/read"
+    },
+    "mark-conversation-unread": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/unread"
+    },
+    "mute-conversation": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/mute"
+    },
+    "unmute-conversation": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/unmute"
+    },
+    "pin-conversation": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/pin"
+    },
+    "unpin-conversation": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/unpin"
+    },
+    "list-conversation-labels": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/conversations/labels"
+    },
+    "upsert-conversation-label": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/labels/upsert"
+    },
+    "delete-conversation-label": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/labels/delete"
+    },
+    "set-conversation-label-members": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/labels"
+    },
+    "list-contacts": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/contacts"
+    },
+    "get-contact": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/contacts/info"
+    },
+    "block-contact": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/contacts/block"
+    },
+    "unblock-contact": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/contacts/unblock"
+    },
+    "list-blocklist": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/contacts/blocklist"
+    },
+    "set-contact-note": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/contacts/note"
+    },
+    "list-groups": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/groups"
+    },
+    "get-group": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/groups/info"
+    },
+    "create-group": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/create"
+    },
+    "leave-group": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/leave"
+    },
+    "update-group-members": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/members"
+    },
+    "update-group-info": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/update-info"
+    },
+    "list-group-join-requests": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/groups/join-requests"
+    },
+    "update-group-join-requests": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/join-requests/update"
+    },
+    "set-group-join-approval-mode": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/groups/join-approval-mode"
+    },
+    "get-group-invite-code": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/groups/invite-code"
+    },
+    "list-api-keys": {
+      "method": "GET",
+      "path": "/v1/api-keys"
+    },
+    "create-api-key": {
+      "method": "POST",
+      "path": "/v1/api-keys"
+    },
+    "update-api-key": {
+      "method": "PATCH",
+      "path": "/v1/api-keys/{key_id}"
+    },
+    "rotate-api-key": {
+      "method": "POST",
+      "path": "/v1/api-keys/{key_id}/rotate"
+    },
+    "list-webhooks": {
+      "method": "GET",
+      "path": "/v1/webhook-endpoints"
+    },
+    "create-webhook": {
+      "method": "POST",
+      "path": "/v1/webhook-endpoints"
+    },
+    "get-webhook": {
+      "method": "GET",
+      "path": "/v1/webhook-endpoints/{endpoint_id}"
+    },
+    "update-webhook": {
+      "method": "PATCH",
+      "path": "/v1/webhook-endpoints/{endpoint_id}"
+    },
+    "deactivate-webhook": {
+      "method": "POST",
+      "path": "/v1/webhook-endpoints/{endpoint_id}/deactivate"
+    },
+    "delete-webhook": {
+      "method": "DELETE",
+      "path": "/v1/webhook-endpoints/{endpoint_id}"
+    },
+    "provider-regions": {
+      "method": "GET",
+      "path": "/v1/providers/{provider}/regions"
+    },
+    "get-account-operation": {
+      "method": "GET",
+      "path": "/v1/account-operations/{operation_id}"
+    },
+    "create-auth-session": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth-sessions"
+    },
+    "submit-passkey-response": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/passkey-response"
+    },
+    "confirm-passkey": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/passkey-confirm"
+    },
+    "add-contact": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/contacts/add"
+    },
+    "get-contact-membership": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/contacts/membership"
+    },
+    "request-conversation-history": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/history/request"
+    },
+    "list-posts": {
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/posts"
+    },
+    "get-post": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/info"
+    },
+    "list-post-comments": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/comments/list"
+    },
+    "reply-post-comment": {
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/posts/comments/reply"
+    },
+    "create-call": {
+      "method": "POST",
+      "path": "/v1/calls"
+    },
+    "get-active-call": {
+      "method": "GET",
+      "path": "/v1/calls/active"
+    },
+    "hangup-call": {
+      "method": "POST",
+      "path": "/v1/calls/{call_id}/hangup"
+    }
   },
   "events": [
     "message.received",
@@ -96,6 +356,12 @@
     "account.history.synced",
     "account.auth.required",
     "account.auth.succeeded",
-    "account.auth.failed"
+    "account.auth.failed",
+    "contact.updated",
+    "post.comment.created",
+    "account.profile.updated",
+    "call.incoming",
+    "call.answered",
+    "call.ended"
   ]
 }
