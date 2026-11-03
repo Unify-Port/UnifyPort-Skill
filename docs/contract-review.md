@@ -34,3 +34,9 @@ Machine-readable route evidence is in [public-contract-review.json](public-contr
 - Account operations require bounded polling and reconciliation; operation state does not prove authorization, refund credit or immediate free capacity.
 - Independently review [standard events](https://www.unifyport.ai/docs/receiving-events/webhook-events/) and [delivery](https://www.unifyport.ai/docs/receiving-events/webhook-delivery/) before changing the event allowlist or verification code. This route review does not authorize an event or signature change.
 - After human review, update both languages, catalogs, exact public contract and tests together, then run `npm run check`. Review any release separately.
+
+## Facebook public-document review
+
+On 2026-11-03, rechecked the deployed [create account](https://www.unifyport.ai/docs/accounts/create-account/), [session import](https://www.unifyport.ai/docs/authentication/import-auth-session/) and [standard event](https://www.unifyport.ai/docs/receiving-events/webhook-events/) pages. The provider enum and session-import channel list do not yet include Facebook; the event page does not establish Facebook-specific fields or capability availability.
+
+The machine-readable `providerReviews` record in `public-contract-review.json` remains `humanReviewed=false`. Wait for deployed channel documentation and human review before updating provider matrices, exact allowlists, field policies, both languages and tests. This change does not activate Facebook, change runtime/HMAC/opt-ins or publish the Skill. Sibling repositories are not implementation sources for this independent Skill.

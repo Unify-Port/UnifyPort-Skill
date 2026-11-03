@@ -34,3 +34,9 @@
 - 账号操作应有界轮询及核对，操作状态不证明授权、退款到账或容量立即可用。
 - 调整事件 allowlist 或校验代码前，应独立复核[标准事件](https://www.unifyport.ai/docs/receiving-events/webhook-events/)和[投递说明](https://www.unifyport.ai/docs/receiving-events/webhook-delivery/)；本次路由证据不授权事件或签名变更。
 - 人工审核后一起更新双语说明、catalog、精确公开契约及测试，运行 `npm run check`，发布另行评审。
+
+## Facebook 公开文档复核
+
+2026-11-03 重新检查已部署的 [创建账号](https://www.unifyport.ai/docs/accounts/create-account/)、[导入会话](https://www.unifyport.ai/docs/authentication/import-auth-session/)和[标准事件](https://www.unifyport.ai/docs/receiving-events/webhook-events/)页面。建号 provider 枚举和会话导入支持渠道尚未列出 Facebook，标准事件页也不能证明 Facebook 专属字段或能力已经开放。
+
+机器可读记录在 `public-contract-review.json` 的 `providerReviews`，保持 `humanReviewed=false`。等待公开渠道文档补齐并人工审核后，再更新渠道能力矩阵、精确 allowlist、字段策略、双语文档和测试；本次不启用 Facebook，不改变 runtime、确认 HMAC 或 opt-in，不发布 Skill。其他仓库不作为本独立 Skill 的实现来源。

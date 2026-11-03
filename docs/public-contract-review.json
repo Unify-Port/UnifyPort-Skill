@@ -101,5 +101,24 @@
       "humanReviewed": false,
       "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/calls/hangup-call/"
     }
+  ],
+  "providerReviews": [
+    {
+      "provider": "facebook",
+      "checkedAt": "2026-11-03",
+      "humanReviewed": false,
+      "status": "not-documented-in-reviewed-public-pages",
+      "publicDocs": [
+        "https://www.unifyport.ai/docs/accounts/create-account/",
+        "https://www.unifyport.ai/docs/authentication/import-auth-session/",
+        "https://www.unifyport.ai/docs/receiving-events/webhook-events/"
+      ],
+      "observations": [
+        "Create-account provider enum does not list facebook.",
+        "Session-import supported channels do not list Facebook.",
+        "The standard-event page does not establish Facebook-specific capability or payload acceptance."
+      ],
+      "activation": "pending-public-documentation-and-human-review"
+    }
   ]
 }
