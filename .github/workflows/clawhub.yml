@@ -41,7 +41,8 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20.x
+          # 固定 CLI 的 Node 版本要求 >=22；发布使用 Node 24 的原生 multipart transport。
+          node-version: 24.x
       - run: npm run check
       - name: Require current human approval before publishing
         if: github.event_name == 'workflow_dispatch' && inputs.confirm_publish == true
@@ -61,15 +62,23 @@ jobs:
       - name: Install pinned official ClawHub CLI
         working-directory: clawhub-source
         run: bun install --frozen-lockfile
+      # Bun 仅安装依赖；构建后的 CLI 用 Node 执行，避免 curl -F 解释 JSON 正文。
+      - name: Build pinned official ClawHub CLI for Node.js
+        working-directory: clawhub-source/packages/clawhub
+        run: node scripts/build.mjs
+      - name: Verify official multipart transport without publishing
+        env:
+          CLAWHUB_CLI_ENTRY: ${{ github.workspace }}/clawhub-source/packages/clawhub/dist/cli.js
+        run: node --test tests/integration/clawhub-transport.test.mjs
       - name: Run explicit-version ClawHub command
         env:
           PUBLISH: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_publish == true }}
           CLAWHUB_TOKEN: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_publish == true && secrets.CLAWHUB_TOKEN || '' }}
         run: |
           if [ "$PUBLISH" = "true" ]; then
-            node scripts/run-clawhub-release.mjs --cli-entry clawhub-source/packages/clawhub/src/cli.ts --publish > "$RUNNER_TEMP/clawhub-result.json"
+            node scripts/run-clawhub-release.mjs --cli-entry clawhub-source/packages/clawhub/dist/cli.js --publish > "$RUNNER_TEMP/clawhub-result.json"
           else
-            node scripts/run-clawhub-release.mjs --cli-entry clawhub-source/packages/clawhub/src/cli.ts > "$RUNNER_TEMP/clawhub-result.json"
+            node scripts/run-clawhub-release.mjs --cli-entry clawhub-source/packages/clawhub/dist/cli.js > "$RUNNER_TEMP/clawhub-result.json"
           fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

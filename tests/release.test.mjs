@@ -10,7 +10,7 @@ import { validateRelease, buildPublishArguments, SKILL_PATH, CLAWHUB_COMMIT } fr
 import { runRelease } from '../scripts/run-clawhub-release.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
-// 仅在隔离夹具中模拟人工签核；真实证据记录始终保留 pending。
+// 仅在隔离夹具中模拟待签核状态，避免修改真实证据或借用其审批结果。
 async function fixture(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'unifyport-release-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -97,7 +97,8 @@ test('invalidates human approval when ignore rules change or disappear without c
 // 只模拟 CLI 返回与身份查询；publish 分支的测试始终注入替身，不执行上传或真实鉴权。
 function mockCli(plan, calls, patch = {}) {
   return (command, args, options) => {
-    assert.equal(command, 'bun');
+    // 同一 Node 可执行文件使 dry-run 与上传都避开 Bun 的 curl transport。
+    assert.equal(command, process.execPath);
     assert.equal(options.env.UNIFYPORT_API_KEY, undefined);
     assert.equal(options.env.CLAWHUB_TOKEN, undefined);
     const dryRun = args.includes('--dry-run');
@@ -115,6 +116,21 @@ test('rejects an unsigned publish before invoking CLI or identity checks', async
     spawnImpl: () => { calls += 1; }, fetchImpl: () => { calls += 1; },
   }), /Final human evidence/);
   assert.equal(calls, 0);
+});
+
+test('rejects a Bun wrapper before any preflight or upload can use curl', () => {
+  // 子进程隔离运行时标记，避免污染其他测试；此路径必须在读取签核前拒绝。
+  const result = spawnSync(process.execPath, ['--input-type=module', '--eval', `
+    import assert from 'node:assert/strict';
+    import { runRelease } from './scripts/run-clawhub-release.mjs';
+    Object.defineProperty(process.versions, 'bun', { value: '1.3.10' });
+    let calls = 0;
+    await assert.rejects(runRelease({ repositoryRoot: '/unused', cliEntry: '/unused', publish: true,
+      spawnImpl: () => { calls += 1; }, fetchImpl: () => { calls += 1; },
+    }), /Run the release wrapper with Node.js/);
+    assert.equal(calls, 0);
+  `], { cwd: repositoryRoot, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
 });
 
 test('rejects mismatched preflight before authentication or any upload even with valid human approval', async t => {
@@ -195,13 +211,13 @@ test('isolates CLI configuration, strips credentials and rejects a mismatched dr
   const directory = await mkdtemp(path.join(os.tmpdir(), 'unifyport-cli-fixture-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const plan = await validateRelease(repositoryRoot);
-  // 替身只检查参数和临时配置，绝不执行第三方 CLI 或访问网络。
-  const executable = path.join(directory, 'bun');
+  // 替身只检查参数和临时配置；没有 Bun 或 PATH 命令也必须能由当前 Node 执行。
+  const executable = path.join(directory, 'cli.mjs');
   const configRecord = path.join(directory, 'config-path.txt');
   await writeFile(executable, `#!/usr/bin/env node
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-const args = process.argv.slice(3);
+const args = process.argv.slice(2);
 assert.ok(args.includes('--dry-run'));
 assert.equal(args[args.indexOf('--version') + 1], '1.1.0');
 assert.equal(args[args.indexOf('--owner') + 1], 'unifyport');
@@ -211,7 +227,7 @@ assert.equal(JSON.parse(fs.readFileSync(process.env.CLAWHUB_CONFIG_PATH)).token,
 fs.writeFileSync(${JSON.stringify(configRecord)}, process.env.CLAWHUB_CONFIG_PATH);
 console.log(JSON.stringify({status:'would-publish',version:'1.1.0',slug:'unifyport-device-api',fileCount:23,fingerprint:process.env.FIXTURE_FINGERPRINT}));
 `, { mode: 0o700 });
-  const run = fingerprint => spawnSync(process.execPath, ['scripts/run-clawhub-release.mjs', '--cli-entry', path.join(directory, 'unused.ts')], { cwd: repositoryRoot, env: { ...process.env, PATH: `${directory}${path.delimiter}${process.env.PATH}`, CLAWHUB_TOKEN: 'test_fixture', UNIFYPORT_API_KEY: 'test_fixture', FIXTURE_FINGERPRINT: fingerprint }, encoding: 'utf8' });
+  const run = fingerprint => spawnSync(process.execPath, ['scripts/run-clawhub-release.mjs', '--cli-entry', executable], { cwd: repositoryRoot, env: { ...process.env, PATH: '', CLAWHUB_TOKEN: 'test_fixture', UNIFYPORT_API_KEY: 'test_fixture', FIXTURE_FINGERPRINT: fingerprint }, encoding: 'utf8' });
   const result = run(plan.fingerprint);
   assert.equal(result.status, 0, result.stderr);
   assert.equal(JSON.parse(result.stdout).fingerprint, plan.fingerprint);
@@ -229,4 +245,12 @@ test('keeps the workflow on the fixed CLI source and manual main-branch publicat
   assert.match(workflow, /inputs.confirm_publish == true/);
   assert.match(workflow, /check-release.mjs --require-human-review/);
   assert.match(workflow, /run-clawhub-release.mjs --cli-entry/);
+  // 构建、真实 transport 回归和发布必须使用同一个固定 CLI 产物。
+  assert.match(workflow, /node-version: 24\.x/);
+  assert.match(workflow, /bun install --frozen-lockfile/);
+  assert.match(workflow, /run: node scripts\/build\.mjs/);
+  assert.match(workflow, /node --test tests\/integration\/clawhub-transport\.test\.mjs/);
+  assert.match(workflow, /CLAWHUB_CLI_ENTRY: .*clawhub-source\/packages\/clawhub\/dist\/cli\.js/);
+  assert.equal((workflow.match(/--cli-entry clawhub-source\/packages\/clawhub\/dist\/cli\.js/g) ?? []).length, 2);
+  assert.doesNotMatch(workflow, /--cli-entry .*src\/cli\.ts/);
 });
