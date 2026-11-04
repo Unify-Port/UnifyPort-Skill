@@ -83,4 +83,7 @@ canonical operation 与 event inventory 位于：
 
 MIT-0，见 [LICENSE](LICENSE)。
 
-2026-11-03 的本地契约更新仍待最终人工证据复核，见[复核范围](docs/contract-review.zh-CN.md)；尚未发布。
+候选版本 **1.1.0** 已完成本地准备，尚未发布。最终公开证据人工复核及精确 bundle 签核仍待完成，参见[复核范围](docs/contract-review.zh-CN.md)。
+
+- [发布说明](skills/unifyport-device-api/references/zh-CN/release-notes.md)
+- [从 1.0.0 迁移](skills/unifyport-device-api/references/zh-CN/migration.md)

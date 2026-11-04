@@ -64,3 +64,9 @@ An operation without a complete risk and confirmation classification is treated 
 Coverage tests must assert the expected action, unique-route, guide, and event counts. A count change is a review signal, not something to accept automatically. Maintainers must inspect additions, removals, duplicate routes, documentation URLs, schemas, sensitive fields, and risk changes before updating the baseline.
 
 The deployed public documentation remains the publication boundary. An implementation detail or private schema cannot independently add an operation to this Skill.
+
+## Field corrections for 1.1.0
+
+The nine corrected action surfaces are recorded with bilingual public evidence and humanReviewed=false. update-account.provider_account_ref remains rejected pending clarification; message aliases retain distinct field boundaries. Counts do not imply complete shared-schema parameter coverage.
+
+[Migration from 1.0.0](../skills/unifyport-device-api/references/en/migration.md)

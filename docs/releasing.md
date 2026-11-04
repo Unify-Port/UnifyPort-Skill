@@ -2,88 +2,45 @@
 
 [English](releasing.md) | [简体中文](releasing.zh-CN.md)
 
-Releases are deliberate, reviewable promotions of the exact directory `skills/unifyport-device-api/`. Passing repository tests is necessary but does not prove that a Skill is published, installable, or visible on ClawHub.
+The current candidate is **1.1.0**, unreleased. Publish only `skills/unifyport-device-api/`. Passing tests or dry-run does not prove publication, installability or real-account acceptance.
 
 ## 1. Prepare the version
 
-1. Confirm the deployed public documentation still matches the catalog baseline.
-2. Update `version` in the canonical `SKILL.md` using Semantic Versioning.
-3. Update paired documentation and release notes for user-visible changes.
-4. Confirm `UNIFYPORT_API_KEY` is still optional in metadata and the only allowed live origin is `https://api.unifyport.ai`.
-5. Review catalog risk, sensitive fields, and confirmation changes independently from implementation changes.
-
-Never reuse an already published version.
+Keep package.json, canonical SKILL.md frontmatter, both Skill Version markers, runner SKILL_VERSION and both release/migration references at the same version. Do not change the confirmation domain or catalog schema just to bump a release. Read [release notes](../skills/unifyport-device-api/references/en/release-notes.md) and [migration](../skills/unifyport-device-api/references/en/migration.md). Confirm the version is not already published; never reuse 1.0.0.
 
 ## 2. Run local gates
 
 ```sh
-npm test
-npm run check:catalog
-npm run check:bundle
-npm run check:repository
 npm run check
+node scripts/check-release.mjs
 ```
 
-The candidate bundle is the real `skills/unifyport-device-api/` directory; no separate copy or package transformation is trusted. `check:bundle` must verify its exact allowlist, frontmatter, bilingual structure, size limit, absence of dependencies and symlinks, public host and endpoint boundary, and secret/PII patterns. `check:repository` separately scans the complete tracked repository surface for leakage outside the publication root.
-
-Review the directory's Git diff directly after the checks. Automated scans can miss context and cannot decide whether an example contains real customer data.
+The release plan records version, fixed owner, exact 23 upload files, each SHA256, a manifestSha256 and the registry fingerprint. The manifest attests both upload bytes and controlFiles (including .clawhubignore); adding, removing or changing filtering rules invalidates human approval even when the upload fingerprint is unchanged. The scanner also checks .clawhubignore (24 local files); that ignore file is not uploaded. Bundle and repository scans are separate. No dependencies are allowed in the Skill or maintenance package. Review the Git diff and public evidence rather than accepting action counts as full parameter coverage.
 
 ## 3. Run the ClawHub dry run
 
-With an authenticated, current ClawHub CLI:
+The pinned official reusable workflow cannot accept an explicit version. This repository uses the same fixed official CLI source at `openclaw/clawhub@ed9c8fdda2119176ba21d33e81823f8de79a6960`, with Bun 1.3.10, and a Node.js standard-library wrapper. With that source checked out separately and its frozen lockfile installed:
 
 ```sh
-clawhub skill publish ./skills/unifyport-device-api \
-  --owner unifyport \
-  --slug unifyport-device-api \
-  --name "UnifyPort Device API" \
-  --version 1.0.0 \
-  --dry-run \
-  --json
+node scripts/run-clawhub-release.mjs --cli-entry <PINNED_CLAWHUB_SOURCE>/packages/clawhub/src/cli.ts
 ```
 
-Replace `1.0.0` with the version in the reviewed `SKILL.md`. Formal publication uses the same command without `--dry-run`.
-
-Inspect the returned owner, Skill name, version, file list, license, and warnings. A successful dry run uploads nothing and is not evidence of a public release.
-
-Pull requests run the same dry-run path through `.github/workflows/clawhub.yml`. Third-party or reusable actions must be pinned to an immutable commit SHA.
+This defaults to tokenless dry-run and explicitly passes owner=unifyport, version=1.1.0, the English release notes, and the exact Skill path. It validates the returned version, file count and fingerprint. The formal path uses identical publication parameters and adds `--publish` only after approval. Before uploading, it repeats the tokenless official CLI dry-run and compares the actual version, file count and fingerprint. Only a match permits identity verification and upload; the bundle and control-file approval are rechecked before upload. A mismatch must cause zero uploads. PRs run only dry-run; workflow_dispatch with confirm_publish=false can also dry-run on main. The workflow saves both JSON artifacts. All third-party actions and CLI source are immutable SHA pins. Do not upload the repository root.
 
 ## 4. Publish manually
 
-Formal publication must be a protected manual action from the reviewed commit. Before approving it, verify:
+Final human review is still pending. A maintainer must review every operation, provider and fieldCorrections record in docs/public-contract-review.json, then set humanReviewed accurately. Review the final plan, set releaseApproval.version, releaseApproval.manifestSha256 and releaseApproval.humanReviewed for that exact bundle. These are human attestations, never auto-generated approval. Bundle or filtering-rule edits invalidate the approval. Regenerate the plan after this gate update; previous manifest hashes do not attest controlFiles. Quality tests accept accurate pending and approved states, and use isolated fixtures for the negative and positive publication paths.
 
-- `clawhub whoami` reports exactly `unifyport`; never continue from another account;
-- the `CLAWHUB_TOKEN` repository secret was created by the `unifyport` account and not copied from a personal fallback account;
-- the manual workflow input `publisher_handle` is typed exactly as `unifyport`;
-- CI at `.github/workflows/ci.yml` passed for the same commit;
-- the expected publisher account owns the namespace;
-- the exact version is new and intentional;
-- the candidate file list contains only approved text files;
-- no UnifyPort API credential or customer data is loaded; only the scoped ClawHub release token is available to the publish job.
+```sh
+node scripts/check-release.mjs --require-human-review
+```
 
-Do not publish automatically on every merge or on catalog drift.
+This gate currently must fail. After it passes and CI is green for the reviewed main SHA, obtain separate release authorization. Manual workflow publication requires main, publisher_handle=unifyport and confirm_publish=true. The wrapper independently checks the token identity via the fixed ClawHub whoami endpoint; the identity must be unifyport. CLAWHUB_TOKEN is available only to the actual release step. No UnifyPort API key or customer data may be loaded. Do not publish automatically after merge. Confirm namespace permissions and unused version live before approving.
 
-## 5. Verify the external state
+## 5. Verify external state
 
-After upload, verify each state independently:
-
-1. ClawHub reports the security scan as passing for the exact owner and version.
-2. The public listing displays the expected name, description, version, files, and MIT-0 license.
-3. A clean environment can install the exact released version.
-4. A documentation-only question works without `UNIFYPORT_API_KEY`.
-5. A mocked or controlled allowlisted read works with a disposable test credential and does not reveal it.
-6. A write is denied without the exact confirmation, and an uncatalogued URL is denied unconditionally.
-
-Do not describe the release as complete until all required external checks pass.
+After an authorized upload, independently verify the security scan, exact owner/version, MIT-0 listing, file fingerprint, clean exact-version installation, docs-only without a credential, mocked safe read, and write rejection without confirmation. Real-account business acceptance is a separate state. Publication is incomplete until the required external checks pass.
 
 ## 6. Rollback and incident handling
 
-If the released bundle contains a security or functional defect:
-
-1. Disable or withdraw the affected version where ClawHub supports it.
-2. Revoke any potentially exposed credential immediately.
-3. Publish a corrected, incremented version; never replace the old version in place.
-4. Document impact without reproducing secrets or customer data.
-5. Add a regression check that inspects the final bundle.
-
-Users pinned to the affected version may not receive the correction automatically, so include a clear upgrade notice.
+Withdraw a defective version if supported, revoke exposed credentials if any, and release an incremented fix. Never replace an immutable version. Users may reinstall the reviewed 1.0.0 bundle with its smaller feature set. Reinstalling cannot reverse API side effects, move accounts or migrate Webhook ownership. Record impact and a regression test without secrets or customer data.

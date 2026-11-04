@@ -2,88 +2,45 @@
 
 [English](releasing.md) | [简体中文](releasing.zh-CN.md)
 
-Release 是对精确目录 `skills/unifyport-device-api/` 的主动、可审核 promotion。仓库测试通过是必要条件，但不能证明 Skill 已发布、可安装或已在 ClawHub 可见。
+当前候选版本为 **1.1.0**，尚未发布。只发布 `skills/unifyport-device-api/`。测试或 dry-run 通过不代表已发布、可安装或真实账号业务验收完成。
 
 ## 1. 准备版本
 
-1. 确认已部署的公开文档仍与 catalog baseline 一致。
-2. 使用 Semantic Versioning 更新 canonical `SKILL.md` 中的 `version`。
-3. 针对 user-visible change 更新配对文档与 release note。
-4. 确认 metadata 中的 `UNIFYPORT_API_KEY` 仍为 optional，且唯一允许的 live origin 是 `https://api.unifyport.ai`。
-5. 独立于 implementation change 审核 catalog risk、sensitive field 与 confirmation change。
-
-不能复用已经发布的 version。
+package.json、canonical SKILL.md frontmatter、中英文 Skill Version 标记、runner SKILL_VERSION 及双语发布/迁移说明必须同版。不能为升级发布号而更改确认 domain 或 catalog schema。阅读[发布说明](../skills/unifyport-device-api/references/zh-CN/release-notes.md)和[迁移说明](../skills/unifyport-device-api/references/zh-CN/migration.md)。确认版本尚未发布，不得复用 1.0.0。
 
 ## 2. 运行本地门禁
 
 ```sh
-npm test
-npm run check:catalog
-npm run check:bundle
-npm run check:repository
 npm run check
+node scripts/check-release.mjs
 ```
 
-Candidate bundle 就是真实的 `skills/unifyport-device-api/` 目录，不信任单独的 copy 或 package transform。`check:bundle` 必须检查 exact allowlist、frontmatter、双语结构、size limit、dependency 与 symlink 缺失、public host 与 endpoint 边界，以及 secret/PII pattern。`check:repository` 另行扫描完整 tracked repository surface，检查发布根目录之外的泄露。
+发布计划包含版本、固定 owner、精确 23 个上传文件、逐文件 SHA256、manifestSha256 及 registry fingerprint。manifest 同时签核上传文件和 controlFiles（含 .clawhubignore）；新增、删除或修改过滤规则都会使人工签核失效，即使上传 fingerprint 不变。扫描额外检查 .clawhubignore，共 24 个本地文件；该 ignore 文件不上传。bundle 和全仓库扫描分别执行。Skill 与维护 package 都不允许依赖。必须审查 Git diff 和公开证据，不能把动作数量当作完整参数覆盖证明。
 
-检查完成后直接审核该目录的 Git diff。自动化 scan 可能缺少上下文，也无法判断示例是否包含真实客户数据。
+## 3. 执行 ClawHub dry-run
 
-## 3. 执行 ClawHub Dry Run
-
-使用已认证且为当前版本的 ClawHub CLI：
+固定的官方 reusable workflow 不支持显式版本。本仓库使用同一固定官方 CLI 源码 `openclaw/clawhub@ed9c8fdda2119176ba21d33e81823f8de79a6960`、Bun 1.3.10 及 Node.js 标准库 wrapper。独立检出该源码并按 frozen lockfile 安装后运行：
 
 ```sh
-clawhub skill publish ./skills/unifyport-device-api \
-  --owner unifyport \
-  --slug unifyport-device-api \
-  --name "UnifyPort Device API" \
-  --version 1.0.0 \
-  --dry-run \
-  --json
+node scripts/run-clawhub-release.mjs --cli-entry <PINNED_CLAWHUB_SOURCE>/packages/clawhub/src/cli.ts
 ```
 
-将 `1.0.0` 替换为经过审核的 `SKILL.md` version。正式发布使用同一命令，但去掉 `--dry-run`。
+默认执行不带 token 的 dry-run，显式传入 owner=unifyport、version=1.1.0、英文发布说明及精确 Skill 路径，并校验返回版本、文件数和 fingerprint。正式入口使用相同发布参数，仅在批准后添加 --publish。上传前再次执行无 token 的官方 CLI dry-run，核对实际版本、文件数和 fingerprint；匹配后才允许校验身份并上传，上传前还会复核 bundle 及过滤规则签核。任何不一致必须保证零上传。PR 只能 dry-run；main 上 workflow_dispatch 的 confirm_publish=false 也可 dry-run。workflow 保存两份 JSON artifact，第三方 action 和 CLI 源码均固定不可变 SHA。禁止上传仓库根目录。
 
-检查返回的 owner、Skill name、version、file list、license 与 warning。Dry run 成功不会上传内容，也不能作为 public release 的证据。
+## 4. 手工发布
 
-Pull request 通过 `.github/workflows/clawhub.yml` 执行相同的 dry-run path。Third-party 或 reusable action 必须固定到 immutable commit SHA。
+最终人工复核仍待完成。维护者需要审核 docs/public-contract-review.json 中所有 operation、provider 及 fieldCorrections 记录，准确填写 humanReviewed；核对最终计划后，填写 releaseApproval.version、releaseApproval.manifestSha256 和 releaseApproval.humanReviewed，签核精确 bundle。人工签核不能由脚本自动生成；修改 bundle 或过滤规则后签核失效。本次门禁升级后需重新生成计划，旧 manifest 摘要不包含 controlFiles。质量测试允许准确的 pending 和 approved 状态，发布拒绝及成功路径分别使用隔离夹具验证。
 
-## 4. 手动发布
+```sh
+node scripts/check-release.mjs --require-human-review
+```
 
-正式发布必须是从已审核 commit 发起的 protected manual action。批准前验证：
+该门禁当前应失败。通过后仍需同一 main SHA 的 CI 成功，并取得单独发布授权。手工发布要求 main、publisher_handle=unifyport、confirm_publish=true；wrapper 还通过固定 ClawHub whoami 端点独立校验 token 身份必须为 unifyport。CLAWHUB_TOKEN 只传给实际发布步骤，不加载 UnifyPort API key 或客户数据。禁止合并后自动发布。批准前实时核对 namespace 权限及版本未被占用。
 
-- `clawhub whoami` 精确返回 `unifyport`，其他账号一律不能继续；
-- 仓库 secret `CLAWHUB_TOKEN` 由 `unifyport` 账号创建，不能来自个人 fallback 账号；
-- 手工 workflow input `publisher_handle` 必须精确输入 `unifyport`；
-- 同一 commit 的 `.github/workflows/ci.yml` 已通过；
-- 预期 publisher account 拥有该 namespace；
-- 精确 version 是新的且符合预期；
-- candidate file list 仅包含批准的文本文件；
-- publication job 不加载 UnifyPort API 凭据或客户数据；只向 publish job 提供 scoped ClawHub release token。
+## 5. 核对外部状态
 
-不能在每次 merge 或 catalog drift 时自动发布。
+经授权上传后，分别验证安全扫描、精确 owner/version、MIT-0 公开页面、文件 fingerprint、干净环境精确版本安装、无凭据 docs-only、mock 安全读取及无确认拒绝写入。真实账号业务验收是独立状态。所需外部检查未完成前，不能宣称发布完成。
 
-## 5. 验证外部状态
+## 6. 回退及事件处理
 
-Upload 后，分别验证以下状态：
-
-1. ClawHub 对精确 owner 与 version 报告 security scan 通过。
-2. Public listing 展示预期 name、description、version、file 与 MIT-0 license。
-3. Clean environment 可以安装精确 released version。
-4. 不设置 `UNIFYPORT_API_KEY` 时，documentation-only question 正常工作。
-5. 使用 disposable test credential 的 mocked 或 controlled allowlisted read 正常工作，且不泄露凭据。
-6. Write 在缺少精确 confirmation 时被拒绝，catalog 外 URL 始终被拒绝。
-
-所有必需 external check 通过前，不能宣布 release 完成。
-
-## 6. Rollback 与事件处理
-
-如果已发布 bundle 包含安全或功能缺陷：
-
-1. 在 ClawHub 支持的范围内禁用或撤下受影响版本。
-2. 立即撤销任何可能暴露的凭据。
-3. 发布递增 version 的修复，不得原地替换旧 version。
-4. 记录影响时不能复现 secret 或 customer data。
-5. 增加检查最终 bundle 的 regression check。
-
-固定到受影响 version 的用户可能无法自动获得修复，因此必须提供清晰的 upgrade notice。
+平台支持时撤回缺陷版本；若有泄露则吊销凭据，并递增版本发布修复，不能覆盖不可变版本。用户可重装此前审查的 1.0.0 bundle，但功能范围较小。重装不能撤销 API 副作用、转移账号或迁移 Webhook 归属。记录影响并补回归测试，不能附带秘密或客户数据。

@@ -28,8 +28,9 @@ function createOperation({ id, method, path, risk }) {
       zhCN: `https://www.unifyport.ai/zh-CN/docs/synthetic/${id}/`,
     },
     pathParams: [...path.matchAll(/\{([^{}]+)\}/g)].map((match) => match[1]),
-    queryFields: [],
-    bodyFields: method === 'GET' ? [] : ['value'],
+    // 夹具保留已审查字段边界，避免合法目录测试绕过真实契约。
+    queryFields: PUBLIC_CONTRACT.reviewedRequestFields?.[id]?.queryFields?.slice() ?? [],
+    bodyFields: PUBLIC_CONTRACT.reviewedRequestFields?.[id]?.bodyFields?.slice() ?? (method === 'GET' ? [] : ['value']),
     risk,
     sensitiveFields: ['id'],
     confirmation,

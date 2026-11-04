@@ -25,6 +25,11 @@ const REQUIRED_FILES = new Set([
   'references/zh-CN/webhooks.md',
   'references/en/errors.md',
   'references/zh-CN/errors.md',
+  // 升级说明必须随安装目录交付，不能只留在仓库外层。
+  'references/en/release-notes.md',
+  'references/zh-CN/release-notes.md',
+  'references/en/migration.md',
+  'references/zh-CN/migration.md',
 ]);
 const SAFE_SCRIPT_HOSTS = new Set(['api.unifyport.ai', 'www.unifyport.ai']);
 const EXECUTABLE_FENCE_LANGUAGES = new Set(['bash', 'sh', 'shell', 'javascript', 'js', 'mjs', 'http']);
@@ -349,7 +354,8 @@ export function validateSkillFrontmatter(markdown) {
   }
 
   addIssue(issues, frontmatter.name === 'unifyport-device-api', 'frontmatter name must equal unifyport-device-api');
-  addIssue(issues, frontmatter.version === '1.0.0', 'frontmatter version must equal 1.0.0');
+  // bundle 只校验版本格式；跨 package、双语入口及 runner 的一致性由 release 门禁负责。
+  addIssue(issues, typeof frontmatter.version === 'string' && /^\d+\.\d+\.\d+$/.test(frontmatter.version), 'frontmatter version must be a stable semantic version');
   addIssue(issues, typeof frontmatter.description === 'string' && frontmatter.description.trim().length >= 20, 'frontmatter description must be meaningful');
   addIssue(issues, isRecord(frontmatter.metadata), 'frontmatter metadata must be an object');
 

@@ -28,8 +28,9 @@ function createOperation({ id, method, path: route, risk }) {
       zhCN: `https://www.unifyport.ai/zh-CN/docs/synthetic/${id}/`,
     },
     pathParams: [...route.matchAll(/\{([^{}]+)\}/g)].map((match) => match[1]),
-    queryFields: [],
-    bodyFields: method === 'GET' ? [] : ['value'],
+    // 发布夹具也遵守字段契约，避免仅靠路由数量使漂移通过。
+    queryFields: PUBLIC_CONTRACT.reviewedRequestFields?.[id]?.queryFields?.slice() ?? [],
+    bodyFields: PUBLIC_CONTRACT.reviewedRequestFields?.[id]?.bodyFields?.slice() ?? (method === 'GET' ? [] : ['value']),
     risk,
     sensitiveFields: ['id'],
     confirmation,
@@ -125,6 +126,9 @@ node scripts/client.mjs --help
 \`\`\`
 `;
   const localizedReferences = {
+    // 发布与迁移指引属于最小可安装内容，缺失任一语言都必须失败。
+    'release-notes.md': ['# Release notes\n\n1.1.0\n', '# 发布说明\n\n1.1.0\n'],
+    'migration.md': ['# Migration\n\n1.1.0\n', '# 迁移\n\n1.1.0\n'],
     'overview.md': ['# Overview\n\n## Boundary\n\nUse public data only.\n', '# 概览\n\n## 边界\n\n仅使用公开数据。\n'],
     'safety.md': ['# Safety\n\n## Stop conditions\n\nFail closed.\n', '# 安全\n\n## 停止条件\n\n默认拒绝。\n'],
     'workflows.md': ['# Workflows\n\n## Documentation\n\nExplain first.\n', '# 工作流\n\n## 文档\n\n先解释。\n'],
@@ -165,7 +169,7 @@ node scripts/client.mjs --help
 test('accepts an exact self-contained bilingual publish bundle', async (t) => {
   const root = await createValidBundle(t);
   const result = await validateBundle(root);
-  assert.equal(result.fileCount, 19);
+  assert.equal(result.fileCount, 23);
   assert.ok(result.totalBytes > 0);
 });
 
@@ -173,7 +177,7 @@ test('allows only the root .clawhubignore as a second defense', async (t) => {
   const root = await createValidBundle(t);
   await writeFile(path.join(root, '.clawhubignore'), '*.map\n.env*\n', 'utf8');
   const result = await validateBundle(root);
-  assert.equal(result.fileCount, 20);
+  assert.equal(result.fileCount, 24);
 });
 
 test('rejects files outside the exact publish allowlist', async (t) => {

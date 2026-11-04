@@ -363,5 +363,76 @@
     "call.incoming",
     "call.answered",
     "call.ended"
-  ]
+  ],
+  "reviewedRequestFields": {
+    "import-auth-session": {
+      "bodyFields": [
+        "session_url",
+        "pin",
+        "proxy_config",
+        "whatsapp-protocol"
+      ]
+    },
+    "list-conversations": {
+      "queryFields": [
+        "type",
+        "cursor",
+        "limit",
+        "label_id"
+      ]
+    },
+    "mark-conversation-read": {
+      "bodyFields": [
+        "conversation_id",
+        "up_to_message_id",
+        "up_to_message_sender_id"
+      ]
+    },
+    "list-webhooks": {
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": []
+    },
+    "get-webhook": {
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": []
+    },
+    "deactivate-webhook": {
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": []
+    },
+    "delete-webhook": {
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": []
+    },
+    "create-webhook": {
+      "queryFields": [],
+      "bodyFields": [
+        "url",
+        "status",
+        "subscribed_events",
+        "signing_secret",
+        "retry_policy",
+        "account_id"
+      ]
+    },
+    "update-webhook": {
+      "queryFields": [],
+      "bodyFields": [
+        "url",
+        "status",
+        "subscribed_events",
+        "signing_secret",
+        "retry_policy",
+        "account_id"
+      ]
+    }
+  }
 }
