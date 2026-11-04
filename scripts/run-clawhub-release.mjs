@@ -9,6 +9,8 @@ const defaultRoot = fileURLToPath(new URL('../', import.meta.url));
 
 // 测试通过显式注入替身覆盖发布顺序，CLI 不开放这些替身或仓库路径覆盖选项。
 export async function runRelease({ repositoryRoot = defaultRoot, cliEntry, publish = false, env = process.env, spawnImpl = spawnSync, fetchImpl = globalThis.fetch }) {
+  // Bun 的官方 CLI 会进入 curl -F 分支，分号等正文会被解释成表单语法，必须使用 Node transport。
+  if (process.versions.bun) throw new Error('Run the release wrapper with Node.js and the compiled official CLI');
   const root = path.resolve(repositoryRoot);
   const plan = await validateRelease(root, { requireHumanReview: publish });
   const configDirectory = await mkdtemp(path.join(os.tmpdir(), 'unifyport-clawhub-'));
@@ -23,7 +25,7 @@ export async function runRelease({ repositoryRoot = defaultRoot, cliEntry, publi
     const invoke = (dryRun) => {
       const command = buildPublishArguments(plan, { dryRun });
       if (env.GITHUB_REPOSITORY && env.GITHUB_SHA) command.push('--source-repo', env.GITHUB_REPOSITORY, '--source-commit', env.GITHUB_SHA, '--source-path', plan.skillPath);
-      const result = spawnImpl('bun', [path.resolve(cliEntry), ...command], { cwd: root, env: childEnv, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024, timeout: 180000 });
+      const result = spawnImpl(process.execPath, [path.resolve(cliEntry), ...command], { cwd: root, env: childEnv, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024, timeout: 180000 });
       if (result.error || result.status !== 0) throw new Error('ClawHub CLI failed; inspect the redacted dry-run environment before retrying');
       let output;
       try { output = JSON.parse(result.stdout); } catch { throw new Error('ClawHub CLI returned invalid JSON'); }
