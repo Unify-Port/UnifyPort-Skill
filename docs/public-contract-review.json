@@ -376,5 +376,290 @@
         "four standard callbacks, no receipts"
       ]
     }
-  ]
+  ],
+  "releaseVersion": "1.1.0",
+  "fieldCorrections": [
+    {
+      "actionId": "import-auth-session",
+      "publicDoc": "https://www.unifyport.ai/docs/authentication/import-auth-session/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/authentication/import-auth-session/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/auth/session",
+      "bodyFields": [
+        "session_url",
+        "pin",
+        "proxy_config",
+        "whatsapp-protocol"
+      ],
+      "risk": "credential",
+      "sensitiveFields": [
+        "account_id",
+        "session",
+        "session_url",
+        "pin",
+        "proxy_config",
+        "cookie",
+        "token",
+        "whatsapp-protocol"
+      ],
+      "evidenceSha256": {
+        "en": "5a022338ac59d6b056fe357f0bb685a7f7ee78e7e0f7ab3a11494c74f4e73ad0",
+        "zhCN": "159f4d91338cc256cdcd0383eda5a3bd2cfe370dc9b6dfb9760c42343a891264"
+      },
+      "humanReviewed": false,
+      "nestedBodyFields": {
+        "whatsapp-protocol": {
+          "requiredStrings": [
+            "phone",
+            "static_pub_key",
+            "static_pri_key",
+            "identity_pub_key",
+            "identity_pri_key"
+          ],
+          "optionalStrings": [
+            "app_version",
+            "server_address",
+            "country",
+            "hash",
+            "peer_kem_public",
+            "auth_hex_data",
+            "authhexdata",
+            "pq_handshake_mode"
+          ],
+          "optionalInt32": [
+            "platform"
+          ],
+          "optionalUint32": [
+            "device"
+          ],
+          "optionalBoolean": [
+            "use_xxkem_handshake"
+          ],
+          "optionalStringArrays": [
+            "fallback_server_addresses"
+          ],
+          "forbidden": [
+            "edge_routing"
+          ]
+        }
+      }
+    },
+    {
+      "actionId": "list-conversations",
+      "publicDoc": "https://www.unifyport.ai/docs/conversations/list-conversations/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/conversations/list-conversations/",
+      "method": "GET",
+      "path": "/v1/accounts/{account_id}/conversations",
+      "queryFields": [
+        "type",
+        "cursor",
+        "limit",
+        "label_id"
+      ],
+      "risk": "read",
+      "sensitiveFields": [
+        "account_id",
+        "id",
+        "conversation_id",
+        "label_id",
+        "cursor",
+        "title",
+        "name",
+        "message",
+        "text"
+      ],
+      "evidenceSha256": {
+        "en": "f56257d0934223f0996656d3fe1e95a3ecbb79f8ff40b42f1193f3f40a501ee6",
+        "zhCN": "3eb69c7a043bc7bf8eb780ceeecdf12b82951fe3a3ef71272dcd7b637d53b704"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "mark-conversation-read",
+      "publicDoc": "https://www.unifyport.ai/docs/conversations/mark-conversation-read/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/conversations/mark-conversation-read/",
+      "method": "POST",
+      "path": "/v1/accounts/{account_id}/conversations/read",
+      "bodyFields": [
+        "conversation_id",
+        "up_to_message_id",
+        "up_to_message_sender_id"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "account_id",
+        "conversation_id",
+        "up_to_message_id",
+        "up_to_message_sender_id"
+      ],
+      "evidenceSha256": {
+        "en": "2a72b9cfa4b7914e1b1eb24c5c564f02df8b7d760fde97f59d6225a4235e3671",
+        "zhCN": "1bac055f590d1e05575fd910fdf0f1fb1f28820f1808c5025fb80aecba42735d"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "list-webhooks",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/list-webhooks/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/list-webhooks/",
+      "method": "GET",
+      "path": "/v1/webhook-endpoints",
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "27c533417f8b241e439a7efa308743bdf344b303cec8260035bf0ddd973d1b64",
+        "zhCN": "aa5fb3af1d77d5cf31a4c9eaf19f46170aedba114fb5dce00fdb06f8da13cabe"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "create-webhook",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/create-webhook/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/create-webhook/",
+      "method": "POST",
+      "path": "/v1/webhook-endpoints",
+      "queryFields": [],
+      "bodyFields": [
+        "url",
+        "status",
+        "subscribed_events",
+        "signing_secret",
+        "retry_policy",
+        "account_id"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "37be4ca2fe197ffb68722eef0401fa55333bd91e8cae1195583e2ff709d6cb45",
+        "zhCN": "9d57d1f0a24af8aded64b73f7ca83d0d5010fa3c3e137355f905c249a7c709b5"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "get-webhook",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/get-webhook/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/get-webhook/",
+      "method": "GET",
+      "path": "/v1/webhook-endpoints/{endpoint_id}",
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": [],
+      "risk": "read",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "68ad06f6195b207cfd1555ec3663d9029338bc24fefc654fdadb5584051ff099",
+        "zhCN": "fbf9a3c8744344d685fd628adb0d74e2e6d6f4a2bf1675549d7dcf33a4721268"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "update-webhook",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/update-webhook/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/update-webhook/",
+      "method": "PATCH",
+      "path": "/v1/webhook-endpoints/{endpoint_id}",
+      "queryFields": [],
+      "bodyFields": [
+        "url",
+        "status",
+        "subscribed_events",
+        "signing_secret",
+        "retry_policy",
+        "account_id"
+      ],
+      "risk": "write",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "7910b0b639bcdbff63fdb4491fbd626ded16d92cd7b9ea96935aa7f57aba0f68",
+        "zhCN": "9508f5f48dfa1f7a5c4d96290ac37af5986b99093339e20f02c46d652fb38773"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "deactivate-webhook",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/deactivate-webhook/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/deactivate-webhook/",
+      "method": "POST",
+      "path": "/v1/webhook-endpoints/{endpoint_id}/deactivate",
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": [],
+      "risk": "write",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "fdc769b734e6e778e222fa904c4f559f237dfe49eaa0c3272d792336f2958dcf",
+        "zhCN": "87c64baadb32ffdf297aaa778fa6f7f1a71d444ab240fe6088a3d310dc4497e5"
+      },
+      "humanReviewed": false
+    },
+    {
+      "actionId": "delete-webhook",
+      "publicDoc": "https://www.unifyport.ai/docs/webhook-endpoints/delete-webhook/",
+      "publicDocZhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/delete-webhook/",
+      "method": "DELETE",
+      "path": "/v1/webhook-endpoints/{endpoint_id}",
+      "queryFields": [
+        "account_id"
+      ],
+      "bodyFields": [],
+      "risk": "destructive",
+      "sensitiveFields": [
+        "id",
+        "endpoint_id",
+        "url",
+        "signing_secret",
+        "account_id"
+      ],
+      "evidenceSha256": {
+        "en": "f558d7b9cdc6c5cfeca177262e6c6cd1c324fe929552afa9552e1df7eb143d70",
+        "zhCN": "4c62d3b51adc64b4a3f21039da2a50b3111aa018c0acb70e15a04f2a1b37c914"
+      },
+      "humanReviewed": false
+    }
+  ],
+  "knownLimits": [
+    "update-account.provider_account_ref remains disallowed pending writable identity semantics clarification.",
+    "Message aliases retain separate intent-specific allowlists."
+  ],
+  "releaseApproval": {
+    "version": "1.1.0",
+    "humanReviewed": false,
+    "manifestSha256": null
+  }
 }

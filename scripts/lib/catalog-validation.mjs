@@ -231,6 +231,10 @@ function validateOperation(operation, index, issues) {
   const pathParams = validateStringArray(operation.pathParams, `${label}.pathParams`, issues);
   validateStringArray(operation.queryFields, `${label}.queryFields`, issues);
   const bodyFields = validateStringArray(operation.bodyFields, `${label}.bodyFields`, issues);
+  // 字段修正同样是公开授权边界，不能只核对 method/path 总数。
+  for (const [key, expected] of Object.entries(PUBLIC_CONTRACT.reviewedRequestFields?.[operation.id] ?? {})) {
+    addIssue(issues, JSON.stringify(operation[key]) === JSON.stringify(expected), `${label}.${key} differs from reviewed request fields`);
+  }
   for (const field of bodyFields) {
     addIssue(issues, !FORBIDDEN_PUBLIC_BODY_FIELDS.has(field), `${label}.bodyFields contains undocumented or read-only field: ${field}`);
   }

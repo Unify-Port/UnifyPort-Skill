@@ -84,3 +84,8 @@ Only `skills/unifyport-device-api/` is the ClawHub publication root. Repository 
 MIT-0. See [LICENSE](LICENSE).
 
 The 2026-11-03 local contract update awaits final human evidence review; see [review scope](docs/contract-review.md). This contract update remains unreleased.
+
+Release candidate **1.1.0** is prepared locally and remains unreleased. Final human evidence review and exact-bundle approval remain pending; see [review scope](docs/contract-review.md).
+
+- [Release notes](skills/unifyport-device-api/references/en/release-notes.md)
+- [Migration from 1.0.0](skills/unifyport-device-api/references/en/migration.md)

@@ -39,3 +39,9 @@
 - runner 报告 boundary、validation、redaction 或 confirmation error。
 
 说明缺少的非敏感信息，但不能削弱 guardrail。
+
+## 协议凭证及账号归属
+
+WhatsApp Protocol 凭证只接受 import-auth-session 的 body.whatsapp-protocol。必须通过完整 --input-stdin、--allow-credential 和精确 HMAC preview；不能放入 provider_data、聊天、argv、日志或保存的夹具。edge_routing 由平台维护。整体对象及散落的短协议密钥均脱敏。上游服务器覆盖必须是公网主机，不代表已验证 DNS 安全性或可达性。
+
+Webhook account_id 位置固定：list/get/deactivate/delete 为 Query，create/update 为 Body。update 保留原绑定，不能以请求成功推断归属或自动迁移配置。account scope 和已读 sender 都绑定 HMAC。使用前阅读[迁移说明](migration.md)。

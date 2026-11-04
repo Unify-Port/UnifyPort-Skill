@@ -486,7 +486,8 @@
       "bodyFields": [
         "session_url",
         "pin",
-        "proxy_config"
+        "proxy_config",
+        "whatsapp-protocol"
       ],
       "risk": "credential",
       "sensitiveFields": [
@@ -496,7 +497,8 @@
         "pin",
         "proxy_config",
         "cookie",
-        "token"
+        "token",
+        "whatsapp-protocol"
       ],
       "confirmation": {
         "mode": "hmac-sha256",
@@ -1006,7 +1008,8 @@
       "queryFields": [
         "type",
         "cursor",
-        "limit"
+        "limit",
+        "label_id"
       ],
       "bodyFields": [],
       "risk": "read",
@@ -1123,13 +1126,15 @@
       "queryFields": [],
       "bodyFields": [
         "conversation_id",
-        "up_to_message_id"
+        "up_to_message_id",
+        "up_to_message_sender_id"
       ],
       "risk": "write",
       "sensitiveFields": [
         "account_id",
         "conversation_id",
-        "up_to_message_id"
+        "up_to_message_id",
+        "up_to_message_sender_id"
       ],
       "confirmation": {
         "mode": "hmac-sha256",
@@ -2149,14 +2154,17 @@
         "zhCN": "https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/list-webhooks/"
       },
       "pathParams": [],
-      "queryFields": [],
+      "queryFields": [
+        "account_id"
+      ],
       "bodyFields": [],
       "risk": "read",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "none",
@@ -2184,14 +2192,16 @@
         "status",
         "subscribed_events",
         "signing_secret",
-        "retry_policy"
+        "retry_policy",
+        "account_id"
       ],
       "risk": "write",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "hmac-sha256",
@@ -2215,14 +2225,17 @@
       "pathParams": [
         "endpoint_id"
       ],
-      "queryFields": [],
+      "queryFields": [
+        "account_id"
+      ],
       "bodyFields": [],
       "risk": "read",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "none",
@@ -2252,14 +2265,16 @@
         "status",
         "subscribed_events",
         "signing_secret",
-        "retry_policy"
+        "retry_policy",
+        "account_id"
       ],
       "risk": "write",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "hmac-sha256",
@@ -2283,14 +2298,17 @@
       "pathParams": [
         "endpoint_id"
       ],
-      "queryFields": [],
+      "queryFields": [
+        "account_id"
+      ],
       "bodyFields": [],
       "risk": "write",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "hmac-sha256",
@@ -2314,14 +2332,17 @@
       "pathParams": [
         "endpoint_id"
       ],
-      "queryFields": [],
+      "queryFields": [
+        "account_id"
+      ],
       "bodyFields": [],
       "risk": "destructive",
       "sensitiveFields": [
         "id",
         "endpoint_id",
         "url",
-        "signing_secret"
+        "signing_secret",
+        "account_id"
       ],
       "confirmation": {
         "mode": "hmac-sha256",

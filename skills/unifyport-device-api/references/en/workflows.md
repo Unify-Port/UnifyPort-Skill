@@ -66,3 +66,11 @@ create-auth-session, submit-passkey-response (webauthn_response is a complete se
 add-contact and get-contact-membership follow WhatsApp LID rules; false is a valid result. History before must refer to one real content message; preserve sent_at and reject synthetic call_record IDs. 202 is not guaranteed callbacks or completion. Post/comment IDs remain nonblank strings. get-post/list-post-comments are POST reads without write confirmation; reply-post-comment requires HMAC and comment_id refers only to a confirmed top-level comment.
 
 create-call requires explicit write intent; hangup-call also needs destructive opt-in and HMAC. Server private beta/is_beta eligibility still applies; never dial automatically. Join URLs, authorization URLs, WebAuthn, provider profiles and reply tokens are redacted from model output; use a controlled UI outside chat when display is necessary. get-active-call is read-only; null means no active call. Hangup may return ended or failed, both terminal.
+
+## Protocol import, labels and read receipts
+
+Use import-auth-session for the nested whatsapp-protocol object; required keys, stdin, redaction and credential/HMAC rules are mandatory. Legacy X session_url/pin/proxy_config remain available. Use query.label_id as an exact string for list-conversations; omission on WhatsApp means starred conversations. For WhatsApp message receipts pair up_to_message_id with up_to_message_sender_id, taking group sender from data.sender.id. Telegram uses a single inbound ID and does not support a non-empty sender. The runner cannot infer the channel. See [migration](migration.md) for empty-value and provider limits.
+
+## Account-scoped Webhook configuration
+
+list/get/deactivate/delete accept query.account_id; create/update accept body.account_id. Omission on list selects workspace endpoints; a filter selects only independent account endpoints. Creation may bind an account, while update only validates the original binding. PATCH is replacement: supply all settings and the saved signing secret to retain them. Do not automatically retry account_webhook_already_exists. Inactive or unmatched subscriptions do not fall back to workspace configuration. See [migration](migration.md).

@@ -39,3 +39,9 @@ Remain in `docs-only` or stop the live workflow when:
 - the runner reports a boundary, validation, redaction, or confirmation error.
 
 Explain the missing non-secret information without weakening the guardrail.
+
+## Protocol credentials and account scope
+
+WhatsApp Protocol credentials are accepted only in import-auth-session body.whatsapp-protocol. Use complete --input-stdin, --allow-credential and the exact HMAC preview. Never put them in provider_data, chat, argv, logs or saved fixtures; edge_routing is platform-owned. The whole object and scattered short protocol keys are redacted. Upstream server overrides must be public hosts, without implying DNS safety or reachability.
+
+Webhook account_id has an exact location: Query for list/get/deactivate/delete, Body for create/update. Preserve the original binding on update; never infer ownership from a successful request or automatically migrate configurations. Account scope and read-receipt sender are part of HMAC. See [migration](migration.md) before using these fields.

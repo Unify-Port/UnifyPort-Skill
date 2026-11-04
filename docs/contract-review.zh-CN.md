@@ -26,3 +26,19 @@
 Facebook 已有公开授权指南与矩阵：session、runtime、E2EE 单聊和单媒体；四类回调已复核，received 可入站/出站。权限、HMAC、凭证 opt-in 与默认脱敏保持适用。最终人工复核应覆盖字段、渠道、标识符、错误码、链接敏感性、异步完成边界及真实账号验收。
 
 [Machine-readable evidence](public-contract-review.json)
+
+## 1.1.0 字段修正
+
+九个修正动作均记录中英文公开证据，并保留 humanReviewed=false。update-account.provider_account_ref 的可写语义待澄清，继续拒绝；消息别名保持各自字段边界。数量不代表完整覆盖共享 schema 的全部参数。
+
+| Action | Public docs | Query | Body | Risk |
+| --- | --- | --- | --- | --- |
+| import-auth-session | [EN](https://www.unifyport.ai/docs/authentication/import-auth-session/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/authentication/import-auth-session/) |  | session_url, pin, proxy_config, whatsapp-protocol | credential |
+| list-conversations | [EN](https://www.unifyport.ai/docs/conversations/list-conversations/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/conversations/list-conversations/) | type, cursor, limit, label_id |  | read |
+| mark-conversation-read | [EN](https://www.unifyport.ai/docs/conversations/mark-conversation-read/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/conversations/mark-conversation-read/) |  | conversation_id, up_to_message_id, up_to_message_sender_id | write |
+| list-webhooks | [EN](https://www.unifyport.ai/docs/webhook-endpoints/list-webhooks/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/list-webhooks/) | account_id |  | read |
+| create-webhook | [EN](https://www.unifyport.ai/docs/webhook-endpoints/create-webhook/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/create-webhook/) |  | url, status, subscribed_events, signing_secret, retry_policy, account_id | write |
+| get-webhook | [EN](https://www.unifyport.ai/docs/webhook-endpoints/get-webhook/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/get-webhook/) | account_id |  | read |
+| update-webhook | [EN](https://www.unifyport.ai/docs/webhook-endpoints/update-webhook/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/update-webhook/) |  | url, status, subscribed_events, signing_secret, retry_policy, account_id | write |
+| deactivate-webhook | [EN](https://www.unifyport.ai/docs/webhook-endpoints/deactivate-webhook/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/deactivate-webhook/) | account_id |  | write |
+| delete-webhook | [EN](https://www.unifyport.ai/docs/webhook-endpoints/delete-webhook/) / [ZH-CN](https://www.unifyport.ai/zh-CN/docs/webhook-endpoints/delete-webhook/) | account_id |  | destructive |

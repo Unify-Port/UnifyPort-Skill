@@ -64,3 +64,9 @@ Catalog 覆盖表示 Skill 能识别并解释某个 action，不代表它可以�
 Coverage test 必须断言预期的 action、unique route、guide 与 event 数量。数量变化是 review signal，不能自动接受。更新基线前，维护者必须检查新增、删除、duplicate route、documentation URL、schema、sensitive field 与 risk 变化。
 
 已部署的公开文档始终是发布边界。Implementation detail 或 private schema 不能单独把 operation 加入本 Skill。
+
+## 1.1.0 字段修正
+
+九个修正动作均记录中英文公开证据，并保留 humanReviewed=false。update-account.provider_account_ref 的可写语义待澄清，继续拒绝；消息别名保持各自字段边界。数量不代表完整覆盖共享 schema 的全部参数。
+
+[从 1.0.0 迁移](../skills/unifyport-device-api/references/zh-CN/migration.md)

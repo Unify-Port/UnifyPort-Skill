@@ -98,7 +98,7 @@ test('selected public actions keep their exact documented request surfaces', () 
     'send-contact-message': { bodyFields: ['account_id', 'to', 'message'] },
     'send-reply-message': { bodyFields: ['account_id', 'to', 'message', 'reply_to'] },
     'send-mention-message': { bodyFields: ['account_id', 'to', 'message', 'mentions'] },
-    'list-conversations': { queryFields: ['type', 'cursor', 'limit'] },
+    'list-conversations': { queryFields: ['type', 'cursor', 'limit', 'label_id'] },
   };
 
   for (const [id, fields] of Object.entries(expectedFields)) {
@@ -244,7 +244,7 @@ test('session and proxy inputs are minimal allowlists with public egress validat
     },
   };
   assert.doesNotThrow(() => prepareOperation('import-auth-session', validInput));
-  assert.deepEqual(getOperation('import-auth-session').bodyFields, ['session_url', 'pin', 'proxy_config']);
+  assert.deepEqual(getOperation('import-auth-session').bodyFields, ['session_url', 'pin', 'proxy_config', 'whatsapp-protocol']);
 
   assert.throws(
     () => prepareOperation('import-auth-session', {
